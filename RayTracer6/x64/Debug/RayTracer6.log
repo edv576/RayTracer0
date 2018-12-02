@@ -1,0 +1,7 @@
+﻿  Main.cpp
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer6\main.cpp(88): warning C4838: conversion from 'int' to 'unsigned char' requires a narrowing conversion
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer6\main.cpp(222): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer6\main.cpp(229): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer6\main.cpp(362): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  RayTracer6.vcxproj -> D:\GMT\Advanced Graphics\GitSaves\RayTracer0\x64\Debug\RayTracer6.exe
+  RayTracer6.vcxproj -> D:\GMT\Advanced Graphics\GitSaves\RayTracer0\x64\Debug\RayTracer6.pdb (Partial PDB)
