@@ -14,9 +14,10 @@ class Triangle : public Object
 	Vect normal;
 	double distance;
 	Color color;
+	Material material;
 public:
 	Triangle();
-	Triangle(Vect, Vect, Vect, Color);
+	Triangle(Vect, Vect, Vect, Color, Material);
 	~Triangle();
 
 	Vect getTriangleNormal() { 
@@ -29,6 +30,8 @@ public:
 	
 	}
 	virtual Color getColor() { return color; }
+
+	virtual Material getMaterial() { return material; }
 
 	virtual Vect getNormalAt(Vect point) {
 		normal = getTriangleNormal();
@@ -100,6 +103,7 @@ Triangle::Triangle()
 	B = Vect(0, 1, 0);
 	C = Vect(0, 0, 1);
 	color = Color(0.5, 0.5, 0.5, 0);
+	material = Material(1, 0, 0, Color(0.5, 0.5, 0.5, 0));
 	Vect CA = Vect(C.getVectX() - A.getVectX(), C.getVectY() - A.getVectY(), C.getVectZ() - A.getVectZ());
 	Vect BA = Vect(B.getVectX() - A.getVectX(), B.getVectY() - A.getVectY(), B.getVectZ() - A.getVectZ());
 
@@ -108,12 +112,13 @@ Triangle::Triangle()
 
 }
 
-Triangle::Triangle(Vect pointA, Vect pointB, Vect pointC, Color colorValue)
+Triangle::Triangle(Vect pointA, Vect pointB, Vect pointC, Color colorValue, Material materialValue)
 {
 	A = pointA;
 	B = pointB;
 	C = pointC;
 	color = colorValue;
+	material = materialValue;
 
 	Vect CA = Vect(C.getVectX() - A.getVectX(), C.getVectY() - A.getVectY(), C.getVectZ() - A.getVectZ());
 	Vect BA = Vect(B.getVectX() - A.getVectX(), B.getVectY() - A.getVectY(), B.getVectZ() - A.getVectZ());

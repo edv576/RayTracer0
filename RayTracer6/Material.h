@@ -22,7 +22,7 @@ public:
 	Material();
 	Material(int, double, double, Color);
 
-
+	int getMaterialType() { return materialType; }
 	Color getColor() { return color; }
 	double getReflectionValue() { return reflectionValue; }
 	double getRefractionValue() { return refractionValue; }

@@ -12,14 +12,16 @@ class Plane : public Object
 	Vect normal;
 	double distance;
 	Color color;
+	Material material;
 public:
 	Plane();
-	Plane(Vect, double, Color);
+	Plane(Vect, double, Color, Material);
 	~Plane();
 
 	Vect getPlaneNormal() { return normal; }
 	double getPlaneDistance() { return distance; }
 	virtual Color getColor() { return color; }
+	virtual Material getMaterial() { return material; }
 
 	virtual Vect getNormalAt(Vect point) {
 
@@ -56,13 +58,15 @@ Plane::Plane()
 	normal = Vect(1, 0, 0);
 	distance = 0;
 	color = Color(0.5, 0.5, 0.5, 0);
+	material = Material(1, 0, 0, Color(0.5, 0.5, 0.5, 0));
 }
 
-Plane::Plane(Vect normalValue, double distanceValue, Color colorValue)
+Plane::Plane(Vect normalValue, double distanceValue, Color colorValue, Material materialValue)
 {
 	normal = normalValue;
 	distance = distanceValue;
 	color = colorValue;
+	material = materialValue;
 }
 
 Plane::~Plane()

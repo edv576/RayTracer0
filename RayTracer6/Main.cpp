@@ -157,7 +157,8 @@ int winningObjectIndex(vector<double> object_intersections) {
 
 Color getColorAt(Vect intersection_position, Vect intersecting_ray_direction, vector<Object*> scene_objects, int index_of_winning_object, vector<Source*> light_sources, double accuracy, double ambientlight) {
 
-	Color winning_object_color = scene_objects.at(index_of_winning_object)->getColor();
+	Material winning_object_material = scene_objects.at(index_of_winning_object)->getMaterial();
+	Color winning_object_color = scene_objects.at(index_of_winning_object)->getMaterial().getColor();
 	Vect winning_object_normal = scene_objects.at(index_of_winning_object)->getNormalAt(intersection_position);
 
 	if (winning_object_color.getColorSpecial() == 2) {
@@ -181,40 +182,45 @@ Color getColorAt(Vect intersection_position, Vect intersecting_ray_direction, ve
 
 	Color final_color = winning_object_color.colorScalar(ambientlight);
 
-	if (winning_object_color.getColorSpecial() > 0 && winning_object_color.getColorSpecial() <= 1) {
-		// reflection from objects with specular intensity
-		double dot1 = winning_object_normal.dotProduct(intersecting_ray_direction.negative());
-		Vect scalar1 = winning_object_normal.vectMult(dot1);
-		Vect add1 = scalar1.vectAdd(intersecting_ray_direction);
-		Vect scalar2 = add1.vectMult(2);
-		Vect add2 = intersecting_ray_direction.negative().vectAdd(scalar2);
-		Vect reflection_direction = add2.normalize();
+	if (winning_object_material.getMaterialType() == 2)
+	{
+		if (winning_object_material.getReflectionValue() > 0 && winning_object_material.getReflectionValue() <= 1) {
+			// reflection from objects with specular intensity
+			double dot1 = winning_object_normal.dotProduct(intersecting_ray_direction.negative());
+			Vect scalar1 = winning_object_normal.vectMult(dot1);
+			Vect add1 = scalar1.vectAdd(intersecting_ray_direction);
+			Vect scalar2 = add1.vectMult(2);
+			Vect add2 = intersecting_ray_direction.negative().vectAdd(scalar2);
+			Vect reflection_direction = add2.normalize();
 
-		Ray reflection_ray(intersection_position, reflection_direction);
+			Ray reflection_ray(intersection_position, reflection_direction);
 
-		// determine what the ray intersects with first
-		vector<double> reflection_intersections;
+			// determine what the ray intersects with first
+			vector<double> reflection_intersections;
 
-		for (int reflection_index = 0; reflection_index < scene_objects.size(); reflection_index++) {
-			reflection_intersections.push_back(scene_objects.at(reflection_index)->findIntersection(reflection_ray));
-		}
+			for (int reflection_index = 0; reflection_index < scene_objects.size(); reflection_index++) {
+				reflection_intersections.push_back(scene_objects.at(reflection_index)->findIntersection(reflection_ray));
+			}
 
-		int index_of_winning_object_with_reflection = winningObjectIndex(reflection_intersections);
+			int index_of_winning_object_with_reflection = winningObjectIndex(reflection_intersections);
 
-		if (index_of_winning_object_with_reflection != -1) {
-			if (reflection_intersections.at(index_of_winning_object_with_reflection) > accuracy) {
-				// determine the position and direction at the point of intersection with the reflection ray
-				// the ray only affects the color if it reflected off something
+			if (index_of_winning_object_with_reflection != -1) {
+				if (reflection_intersections.at(index_of_winning_object_with_reflection) > accuracy) {
+					// determine the position and direction at the point of intersection with the reflection ray
+					// the ray only affects the color if it reflected off something
 
-				Vect reflection_intersection_position = intersection_position.vectAdd(reflection_direction.vectMult(reflection_intersections.at(index_of_winning_object_with_reflection)));
-				Vect reflection_intersection_ray_direction = reflection_direction;
+					Vect reflection_intersection_position = intersection_position.vectAdd(reflection_direction.vectMult(reflection_intersections.at(index_of_winning_object_with_reflection)));
+					Vect reflection_intersection_ray_direction = reflection_direction;
 
-				Color reflection_intersection_color = getColorAt(reflection_intersection_position, reflection_intersection_ray_direction, scene_objects, index_of_winning_object_with_reflection, light_sources, accuracy, ambientlight);
+					Color reflection_intersection_color = getColorAt(reflection_intersection_position, reflection_intersection_ray_direction, scene_objects, index_of_winning_object_with_reflection, light_sources, accuracy, ambientlight);
 
-				final_color = final_color.colorAdd(reflection_intersection_color.colorScalar(winning_object_color.getColorSpecial()));
+					final_color = final_color.colorAdd(reflection_intersection_color.colorScalar(winning_object_material.getReflectionValue()));
+				}
 			}
 		}
 	}
+
+	
 
 	for (int light_index = 0; light_index < light_sources.size(); light_index++) {
 		Vect light_direction = light_sources.at(light_index)->getLightPosition().vectAdd(intersection_position.negative()).normalize();
@@ -327,11 +333,11 @@ int main(int argc, char *argv[]) {
 
 	//Objects
 
-	Sphere scene_sphere(O, 1, very_green);
-	Plane scene_plane(Y, -1, check_floor);
-	Sphere scene_sphere2(new_sphere_position, 0.5, grey);
-	Sphere scene_sphere3(new_sphere_position2, 0.6, orange_reflective);
-	Triangle scene_triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange);
+	Sphere scene_sphere(O, 1, very_green, Material(2,0.3,0,very_green));
+	Plane scene_plane(Y, -1, check_floor, Material(1,0,0,check_floor));
+	Sphere scene_sphere2(new_sphere_position, 0.5, grey, Material(1,0,0,grey));
+	Sphere scene_sphere3(new_sphere_position2, 0.6, orange_reflective, Material(2,0.2,0,orange_reflective));
+	Triangle scene_triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange, Material(1,0,0,orange));
 
 	vector<Object*> scene_objects;
 	scene_objects.push_back(dynamic_cast<Object*>(&scene_sphere));

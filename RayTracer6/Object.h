@@ -7,6 +7,7 @@
 #include "Vect.h"
 #include "Color.h"
 #include "Ray.h"
+#include "Material.h"
 
 class Object
 {
@@ -14,6 +15,7 @@ class Object
 public:
 	Object();
 
+	virtual Material getMaterial() { return Material(1, 0, 0, Color(0.0, 0.0, 0.0, 0)); }
 
 	virtual Color getColor() { return Color(0.0,0.0,0.0,0); }
 

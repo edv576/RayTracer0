@@ -7,6 +7,7 @@
 #include "math.h"
 #include "Vect.h"
 #include "Color.h"
+#include "Material.h"
 
 class Sphere : public Object
 {
@@ -14,14 +15,16 @@ class Sphere : public Object
 	Vect center;
 	double radius;
 	Color color;
+	Material material;
 public:
 	Sphere();
-	Sphere(Vect, double, Color);
+	Sphere(Vect, double, Color, Material);
 	~Sphere();
 
 	Vect getSphereCenter() { return center; }
 	double getSphereRadius() { return radius; }
 	virtual Color getColor() { return color; }
+	virtual Material getMaterial(){ return material; }
 
 	virtual Vect getNormalAt(Vect point) {
 		Vect normal_vect = point.vectAdd(center.negative()).normalize();
@@ -91,13 +94,16 @@ Sphere::Sphere()
 	center = Vect(0, 0, 0);
 	radius = 1;
 	color = Color(0.5, 0.5, 0.5, 0);
+	material = Material(1, 0, 0, Color(0.5, 0.5, 0.5, 0));
 }
 
-Sphere::Sphere(Vect centerValue, double radiusValue, Color colorValue)
+Sphere::Sphere(Vect centerValue, double radiusValue, Color colorValue, Material materialValue)
 {
 	center = centerValue;
 	radius = radiusValue;
 	color = colorValue;
+	material = materialValue;
+
 }
 
 Sphere::~Sphere()
