@@ -37,6 +37,7 @@ void savebmp(const char *filename, int w, int h, int dpi, RGBType *data)
 	FILE *f;
 	int k = w * h;
 	int s = 4 * k;
+	
 
 	int filesize = 54 + s;
 
@@ -304,6 +305,7 @@ int main(int argc, char *argv[]) {
 	Vect Z(0, 0, 1);
 	Vect new_sphere_position(1.75, -0.25, 0);
 	Vect new_sphere_position2(-1, -0.25, -2);
+	Vect new_sphere_position3(0, 2, 0);
 
 	Vect campos(3, 1.5, -4);
 
@@ -318,7 +320,7 @@ int main(int argc, char *argv[]) {
 
 	Color white_light(1.0, 1.0, 1.0, 1);
 	Color very_green(0.5, 1.0, 0.5, 0.3);
-	Color maroon(0.5, 0.25, 0.25, 2);
+	Color maroon(0.5, 0.25, 0.25, 0);
 	Color grey(0.5, 0.5, 0.5, 0);
 	Color black(0.0, 0.0, 0.0, 0);
 	Color orange(0.94, 0.75, 0.31, 0);
@@ -336,7 +338,8 @@ int main(int argc, char *argv[]) {
 	Sphere scene_sphere(O, 1, very_green, Material(2,0.3,0,very_green));
 	Plane scene_plane(Y, -1, check_floor, Material(1,0,0,check_floor));
 	Sphere scene_sphere2(new_sphere_position, 0.5, grey, Material(1,0,0,grey));
-	Sphere scene_sphere3(new_sphere_position2, 0.6, orange_reflective, Material(2,0.2,0,orange_reflective));
+	Sphere scene_sphere3(new_sphere_position2, 0.5, orange_reflective, Material(2,0.2,0,orange_reflective));
+	Sphere scene_sphere4(new_sphere_position3, 0.5, grey, Material(1, 0.2, 0, grey));
 	Triangle scene_triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange, Material(1,0,0,orange));
 
 	vector<Object*> scene_objects;
@@ -344,6 +347,7 @@ int main(int argc, char *argv[]) {
 	scene_objects.push_back(dynamic_cast<Object*>(&scene_plane));
 	scene_objects.push_back(dynamic_cast<Object*>(&scene_sphere2));
 	scene_objects.push_back(dynamic_cast<Object*>(&scene_sphere3));
+	scene_objects.push_back(dynamic_cast<Object*>(&scene_sphere4));
 	scene_objects.push_back(dynamic_cast<Object*>(&scene_triangle));
 
 	double xamnt, yamnt;
@@ -479,6 +483,7 @@ int main(int argc, char *argv[]) {
 			pixels[thisone].r = avgRed;
 			pixels[thisone].g = avgGreen;
 			pixels[thisone].b = avgBlue;
+			
 
 		}
 	}
