@@ -1,0 +1,5 @@
+﻿  MyForm.cpp
+  .NETFramework,Version=v4.5.2.AssemblyAttributes.cpp
+  MyForm.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
+  RayTracer7.vcxproj -> D:\GMT\Advanced Graphics\RayTracer7\Debug\RayTracer7.exe
+  RayTracer7.vcxproj -> D:\GMT\Advanced Graphics\RayTracer7\Debug\RayTracer7.pdb (Partial PDB)
