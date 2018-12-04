@@ -140,9 +140,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="algebra.cpp" />
     <ClCompile Include="MyForm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="algebra.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Light.h" />
@@ -156,6 +158,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Source.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Torus.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vect.h" />
   </ItemGroup>

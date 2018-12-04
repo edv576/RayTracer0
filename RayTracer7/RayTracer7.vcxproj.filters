@@ -18,6 +18,9 @@
     <ClCompile Include="MyForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="algebra.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyForm.h">
@@ -57,6 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Torus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="algebra.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

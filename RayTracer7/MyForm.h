@@ -157,7 +157,7 @@ namespace RayTracer7 {
 			// 
 			// testButton
 			// 
-			this->testButton->Location = System::Drawing::Point(427, 224);
+			this->testButton->Location = System::Drawing::Point(547, 225);
 			this->testButton->Name = L"testButton";
 			this->testButton->Size = System::Drawing::Size(150, 23);
 			this->testButton->TabIndex = 1;
@@ -208,7 +208,7 @@ namespace RayTracer7 {
 			this->txtCameraPositionX->Name = L"txtCameraPositionX";
 			this->txtCameraPositionX->Size = System::Drawing::Size(61, 22);
 			this->txtCameraPositionX->TabIndex = 6;
-			this->txtCameraPositionX->Text = L"3";
+			this->txtCameraPositionX->Text = L"0";
 			// 
 			// txtCameraPositionZ
 			// 
@@ -216,7 +216,7 @@ namespace RayTracer7 {
 			this->txtCameraPositionZ->Name = L"txtCameraPositionZ";
 			this->txtCameraPositionZ->Size = System::Drawing::Size(61, 22);
 			this->txtCameraPositionZ->TabIndex = 7;
-			this->txtCameraPositionZ->Text = L"-4";
+			this->txtCameraPositionZ->Text = L"-4.8";
 			this->txtCameraPositionZ->TextChanged += gcnew System::EventHandler(this, &MyForm::txtCameraPositionZ_TextChanged);
 			// 
 			// txtCameraPositionY
@@ -225,7 +225,7 @@ namespace RayTracer7 {
 			this->txtCameraPositionY->Name = L"txtCameraPositionY";
 			this->txtCameraPositionY->Size = System::Drawing::Size(61, 22);
 			this->txtCameraPositionY->TabIndex = 8;
-			this->txtCameraPositionY->Text = L"1.5";
+			this->txtCameraPositionY->Text = L"0.5";
 			// 
 			// btnLessPositionX
 			// 
@@ -279,30 +279,33 @@ namespace RayTracer7 {
 			// 
 			// btnLessDirectionY
 			// 
-			this->btnLessDirectionY->Location = System::Drawing::Point(350, 255);
+			this->btnLessDirectionY->Location = System::Drawing::Point(367, 256);
 			this->btnLessDirectionY->Name = L"btnLessDirectionY";
-			this->btnLessDirectionY->Size = System::Drawing::Size(27, 23);
+			this->btnLessDirectionY->Size = System::Drawing::Size(61, 24);
 			this->btnLessDirectionY->TabIndex = 26;
-			this->btnLessDirectionY->Text = L"-";
+			this->btnLessDirectionY->Text = L"Right";
 			this->btnLessDirectionY->UseVisualStyleBackColor = true;
+			this->btnLessDirectionY->Click += gcnew System::EventHandler(this, &MyForm::btnLessDirectionY_Click);
 			// 
 			// btnMoreDirectionY
 			// 
 			this->btnMoreDirectionY->Location = System::Drawing::Point(317, 255);
 			this->btnMoreDirectionY->Name = L"btnMoreDirectionY";
-			this->btnMoreDirectionY->Size = System::Drawing::Size(27, 23);
+			this->btnMoreDirectionY->Size = System::Drawing::Size(44, 25);
 			this->btnMoreDirectionY->TabIndex = 25;
-			this->btnMoreDirectionY->Text = L"+";
+			this->btnMoreDirectionY->Text = L"Left";
 			this->btnMoreDirectionY->UseVisualStyleBackColor = true;
+			this->btnMoreDirectionY->Click += gcnew System::EventHandler(this, &MyForm::btnMoreDirectionY_Click);
 			// 
 			// btnLessDirectionX
 			// 
-			this->btnLessDirectionX->Location = System::Drawing::Point(350, 224);
+			this->btnLessDirectionX->Location = System::Drawing::Point(367, 224);
 			this->btnLessDirectionX->Name = L"btnLessDirectionX";
-			this->btnLessDirectionX->Size = System::Drawing::Size(27, 23);
+			this->btnLessDirectionX->Size = System::Drawing::Size(61, 25);
 			this->btnLessDirectionX->TabIndex = 22;
-			this->btnLessDirectionX->Text = L"-";
+			this->btnLessDirectionX->Text = L"Down";
 			this->btnLessDirectionX->UseVisualStyleBackColor = true;
+			this->btnLessDirectionX->Click += gcnew System::EventHandler(this, &MyForm::btnLessDirectionX_Click);
 			// 
 			// txtCameraDirectionY
 			// 
@@ -342,9 +345,9 @@ namespace RayTracer7 {
 			// 
 			this->btnMoreDirectionX->Location = System::Drawing::Point(317, 224);
 			this->btnMoreDirectionX->Name = L"btnMoreDirectionX";
-			this->btnMoreDirectionX->Size = System::Drawing::Size(27, 23);
+			this->btnMoreDirectionX->Size = System::Drawing::Size(44, 25);
 			this->btnMoreDirectionX->TabIndex = 15;
-			this->btnMoreDirectionX->Text = L"+";
+			this->btnMoreDirectionX->Text = L"Up";
 			this->btnMoreDirectionX->UseVisualStyleBackColor = true;
 			this->btnMoreDirectionX->Click += gcnew System::EventHandler(this, &MyForm::btnMoreDirectionX_Click);
 			// 
@@ -408,7 +411,7 @@ namespace RayTracer7 {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(663, 455);
+			this->ClientSize = System::Drawing::Size(809, 455);
 			this->Controls->Add(this->lblHeight);
 			this->Controls->Add(this->lblWidth);
 			this->Controls->Add(this->txtHeight);
@@ -454,7 +457,7 @@ namespace RayTracer7 {
 				System::Convert::ToDouble(txtCameraPositionZ->Text));
 			renderer->setWidth(System::Convert::ToInt32(txtWidth->Text));
 			renderer->setHeight(System::Convert::ToInt32(txtHeight->Text));
-			renderer->setCamDir(System::Convert::ToDouble(txtCameraDirectionX->Text), System::Convert::ToDouble(txtCameraDirectionY->Text));
+			renderer->setCamDir(System::Convert::ToDouble(txtCameraDirectionX->Text)*-1, System::Convert::ToDouble(txtCameraDirectionY->Text)*-1);
 			std::string Something = "Some text";
 
 			int ex = 5;
@@ -517,6 +520,28 @@ private: System::Void btnLessPositionZ_Click(System::Object^  sender, System::Ev
 private: System::Void txtCameraPositionZ_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 }
 private: System::Void btnMoreDirectionX_Click(System::Object^  sender, System::EventArgs^  e) {
+	double valueX = System::Convert::ToDouble(txtCameraDirectionX->Text);
+	valueX += 1;
+	txtCameraDirectionX->Text = System::Convert::ToString(valueX);
+
+
+}
+private: System::Void btnLessDirectionY_Click(System::Object^  sender, System::EventArgs^  e) {
+	double valueY = System::Convert::ToDouble(txtCameraDirectionY->Text);
+	valueY -= 1;
+	txtCameraDirectionY->Text = System::Convert::ToString(valueY);
+}
+private: System::Void btnLessDirectionX_Click(System::Object^  sender, System::EventArgs^  e) {
+	double valueX = System::Convert::ToDouble(txtCameraDirectionX->Text);
+	valueX -= 1;
+	txtCameraDirectionX->Text = System::Convert::ToString(valueX);
+
+}
+private: System::Void btnMoreDirectionY_Click(System::Object^  sender, System::EventArgs^  e) {
+	double valueY = System::Convert::ToDouble(txtCameraDirectionY->Text);
+	valueY += 1;
+	txtCameraDirectionY->Text = System::Convert::ToString(valueY);
+
 }
 };
 }

@@ -101,7 +101,21 @@ class Vect
 
 		}
 
+		Vect vectRotationZ(double angles) {
 
+			double radAngles;
+
+			radAngles = deg2rad(angles);
+
+			double xComp, yComp, zComp;
+
+			xComp = cos(radAngles)*x + sin(radAngles) * y + 0*z;
+			yComp = -sin(radAngles) * x + cos(radAngles) * y + 0 * z;
+			zComp = 0*x + 0 * y + 1*z;
+
+			return Vect(xComp, yComp, zComp);
+
+		}
 
 	private:
 
