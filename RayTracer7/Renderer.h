@@ -60,11 +60,11 @@ public:
 		lookAt = Vect(valX, valY, valZ);
 	}
 
-	void setCamDir(double anglesX, double anglesY) {
+	void setCamDir(double anglesX, double anglesY, double anglesZ) {
 
 		Vect initialDirection(0, 0, 1);
 
-		camDir = initialDirection.vectRotationX(anglesX).vectRotationY(anglesY).normalize();
+		camDir = initialDirection.vectRotationX(anglesX).vectRotationY(anglesY).vectRotationZ(anglesZ).normalize();
 	}
 
 	void setWidth(int w) {
@@ -468,17 +468,14 @@ void Renderer::render() {
 					{
 						// anti-aliasing
 						if (width > height) {
-							// the image is wider than it is tall
 							xamnt = ((x + (double)aax / ((double)aadepth - 1)) / width)*aspectratio - (((width - height) / (double)height) / 2);
 							yamnt = ((height - y) + (double)aax / ((double)aadepth - 1)) / height;
 						}
 						else if (height > width) {
-							// the imager is taller than it is wide
 							xamnt = (x + (double)aax / ((double)aadepth - 1)) / width;
 							yamnt = (((height - y) + (double)aax / ((double)aadepth - 1)) / height) / aspectratio - (((height - width) / (double)width) / 2);
 						}
 						else {
-							// the image is square
 							xamnt = (x + (double)aax / ((double)aadepth - 1)) / width;
 							yamnt = ((height - y) + (double)aax / ((double)aadepth - 1)) / height;
 

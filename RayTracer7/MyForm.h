@@ -96,6 +96,7 @@ namespace RayTracer7 {
 
 
 
+
 	protected:
 
 
@@ -209,6 +210,7 @@ namespace RayTracer7 {
 			this->txtCameraPositionX->Size = System::Drawing::Size(61, 22);
 			this->txtCameraPositionX->TabIndex = 6;
 			this->txtCameraPositionX->Text = L"0";
+			this->txtCameraPositionX->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtCameraPositionX_KeyPress);
 			// 
 			// txtCameraPositionZ
 			// 
@@ -218,6 +220,7 @@ namespace RayTracer7 {
 			this->txtCameraPositionZ->TabIndex = 7;
 			this->txtCameraPositionZ->Text = L"-4.8";
 			this->txtCameraPositionZ->TextChanged += gcnew System::EventHandler(this, &MyForm::txtCameraPositionZ_TextChanged);
+			this->txtCameraPositionZ->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtCameraPositionZ_KeyPress);
 			// 
 			// txtCameraPositionY
 			// 
@@ -226,6 +229,7 @@ namespace RayTracer7 {
 			this->txtCameraPositionY->Size = System::Drawing::Size(61, 22);
 			this->txtCameraPositionY->TabIndex = 8;
 			this->txtCameraPositionY->Text = L"0.5";
+			this->txtCameraPositionY->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtCameraPositionY_KeyPress);
 			// 
 			// btnLessPositionX
 			// 
@@ -314,6 +318,8 @@ namespace RayTracer7 {
 			this->txtCameraDirectionY->Size = System::Drawing::Size(61, 22);
 			this->txtCameraDirectionY->TabIndex = 21;
 			this->txtCameraDirectionY->Text = L"0";
+			this->txtCameraDirectionY->TextChanged += gcnew System::EventHandler(this, &MyForm::txtCameraDirectionY_TextChanged);
+			this->txtCameraDirectionY->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtCameraDirectionY_KeyPress);
 			// 
 			// txtCameraDirectionX
 			// 
@@ -322,6 +328,7 @@ namespace RayTracer7 {
 			this->txtCameraDirectionX->Size = System::Drawing::Size(61, 22);
 			this->txtCameraDirectionX->TabIndex = 19;
 			this->txtCameraDirectionX->Text = L"0";
+			this->txtCameraDirectionX->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtCameraDirectionX_KeyPress);
 			// 
 			// lblCameraDirectionY
 			// 
@@ -388,6 +395,7 @@ namespace RayTracer7 {
 			this->txtWidth->Size = System::Drawing::Size(61, 22);
 			this->txtWidth->TabIndex = 28;
 			this->txtWidth->Text = L"640";
+			this->txtWidth->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtWidth_KeyPress);
 			// 
 			// lblHeight
 			// 
@@ -452,27 +460,36 @@ namespace RayTracer7 {
 
 			//label1->Text = "Rendering ...";
 
-			renderer->setCamPos(System::Convert::ToDouble(txtCameraPositionX->Text), 
-				System::Convert::ToDouble(txtCameraPositionY->Text), 
-				System::Convert::ToDouble(txtCameraPositionZ->Text));
-			renderer->setWidth(System::Convert::ToInt32(txtWidth->Text));
-			renderer->setHeight(System::Convert::ToInt32(txtHeight->Text));
-			renderer->setCamDir(System::Convert::ToDouble(txtCameraDirectionX->Text)*-1, System::Convert::ToDouble(txtCameraDirectionY->Text)*-1);
-			std::string Something = "Some text";
+			try
+			{
+				renderer->setCamPos(System::Convert::ToDouble(txtCameraPositionX->Text),
+					System::Convert::ToDouble(txtCameraPositionY->Text),
+					System::Convert::ToDouble(txtCameraPositionZ->Text));
+				renderer->setWidth(System::Convert::ToInt32(txtWidth->Text));
+				renderer->setHeight(System::Convert::ToInt32(txtHeight->Text));
+				renderer->setCamDir(System::Convert::ToDouble(txtCameraDirectionX->Text)*-1, System::Convert::ToDouble(txtCameraDirectionY->Text)*-1, 0);
+				std::string Something = "Some text";
 
-			int ex = 5;
-			System::String^ t = System::Convert::ToString(ex);
-			testButton->Text = "Rendering ...";
+				int ex = 5;
+				System::String^ t = System::Convert::ToString(ex);
+				testButton->Text = "Rendering ...";
+
+				renderer->render();
+				testButton->Enabled = false;
+
+				Mat original = imread("scene.bmp", CV_LOAD_IMAGE_COLOR);
+
+				imshow("Original", original);
+
+				testButton->Enabled = true;
+				testButton->Text = "Render";
+			}
+			catch (const std::exception&)
+			{
+				return;
+			}
+
 			
-			renderer->render();
-			testButton->Enabled = false;
-			
-			Mat original = imread("scene.bmp", CV_LOAD_IMAGE_COLOR);
-
-			imshow("Original", original);
-
-			testButton->Enabled = true;
-			testButton->Text = "Render";
 
 		}
 		
@@ -543,5 +560,94 @@ private: System::Void btnMoreDirectionY_Click(System::Object^  sender, System::E
 	txtCameraDirectionY->Text = System::Convert::ToString(valueY);
 
 }
+private: System::Void txtCameraPositionX_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+
+	if (e->KeyChar == '.') {
+		if (this->txtCameraPositionX->Text->Contains(".") && !this->txtCameraPositionX->SelectedText->Contains("."))
+			e->Handled = true;
+	}
+
+	else if (e->KeyChar == '-') {
+		if ((!System::String::IsNullOrWhiteSpace(this->txtCameraPositionX->Text)) && !(this->txtCameraPositionX->Text->IndexOf('-') == -1))
+			e->Handled = true;
+	}
+
+	else if (!Char::IsDigit(e->KeyChar) && e->KeyChar != 0x08) {
+		e->Handled = true;
+	}
+
+}
+private: System::Void txtCameraPositionY_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+	if (e->KeyChar == '.') {
+		if (this->txtCameraPositionX->Text->Contains(".") && !this->txtCameraPositionX->SelectedText->Contains("."))
+			e->Handled = true;
+	}
+
+	else if (e->KeyChar == '-') {
+		if ((!System::String::IsNullOrWhiteSpace(this->txtCameraPositionX->Text)) && !(this->txtCameraPositionX->Text->IndexOf('-') == -1))
+			e->Handled = true;
+	}
+
+	else if (!Char::IsDigit(e->KeyChar) && e->KeyChar != 0x08) {
+		e->Handled = true;
+	}
+}
+private: System::Void txtCameraPositionZ_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+
+	if (e->KeyChar == '.') {
+		if (this->txtCameraPositionX->Text->Contains(".") && !this->txtCameraPositionX->SelectedText->Contains("."))
+			e->Handled = true;
+	}
+
+	else if (e->KeyChar == '-') {
+		if ((!System::String::IsNullOrWhiteSpace(this->txtCameraPositionX->Text)) && !(this->txtCameraPositionX->Text->IndexOf('-') == -1))
+			e->Handled = true;
+	}
+
+	else if (!Char::IsDigit(e->KeyChar) && e->KeyChar != 0x08) {
+		e->Handled = true;
+	}
+}
+private: System::Void txtCameraDirectionX_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+	if (e->KeyChar == '.') {
+		if (this->txtCameraPositionX->Text->Contains(".") && !this->txtCameraPositionX->SelectedText->Contains("."))
+			e->Handled = true;
+	}
+
+	else if (e->KeyChar == '-') {
+		if ((!System::String::IsNullOrWhiteSpace(this->txtCameraPositionX->Text)) && !(this->txtCameraPositionX->Text->IndexOf('-') == -1))
+			e->Handled = true;
+	}
+
+	else if (!Char::IsDigit(e->KeyChar) && e->KeyChar != 0x08) {
+		e->Handled = true;
+	}
+}
+private: System::Void txtCameraDirectionY_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void txtCameraDirectionY_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+
+	if (e->KeyChar == '.') {
+		if (this->txtCameraPositionX->Text->Contains(".") && !this->txtCameraPositionX->SelectedText->Contains("."))
+			e->Handled = true;
+	}
+
+	else if (e->KeyChar == '-') {
+		if ((!System::String::IsNullOrWhiteSpace(this->txtCameraPositionX->Text)) && !(this->txtCameraPositionX->Text->IndexOf('-') == -1))
+			e->Handled = true;
+	}
+
+	else if (!Char::IsDigit(e->KeyChar) && e->KeyChar != 0x08) {
+		e->Handled = true;
+	}
+}
+private: System::Void txtWidth_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+
+	if (!Char::IsDigit(e->KeyChar) && e->KeyChar != 0x08) {
+		e->Handled = true;
+	}
+}
 };
+
+
 }
