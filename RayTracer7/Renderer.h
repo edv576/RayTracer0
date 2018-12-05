@@ -25,6 +25,7 @@
 #include "Plane.h"
 #include "Source.h"
 #include "Triangle.h"
+#include "Torus.h"
 
 #pragma warning(disable : 4996)
 
@@ -298,7 +299,7 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 			// test for shadows
 			bool shadowed = false;
 
-			Vect distance_to_light = light_sources.at(light_index)->getLightPosition().vectAdd(intersection_position.negative()).normalize();
+			Vect distance_to_light = light_sources.at(light_index)->getLightPosition().vectAdd(intersection_position.negative());
 			float distance_to_light_magnitude = distance_to_light.magnitude();
 
 			Ray shadow_ray(intersection_position, light_sources.at(light_index)->getLightPosition().vectAdd(intersection_position.negative()).normalize());
@@ -407,6 +408,7 @@ void Renderer::render() {
 	//Objects
 
 	Sphere scene_sphere(O, 1, very_green, Material(2, 0.3, 0, very_green));
+	Torus scene_torus(O, 0.1, 0.5, grey, Material(1, 0, 0, grey));
 	Plane scene_plane(Y, -1, check_floor, Material(1, 0, 0, check_floor));
 	Sphere scene_sphere2(new_sphere_position, 0.5, grey, Material(1, 0, 0, grey));
 	Sphere scene_sphere3(new_sphere_position2, 0.5, orange_reflective, Material(2, 0.2, 0, orange_reflective));
@@ -415,6 +417,7 @@ void Renderer::render() {
 
 	std::vector<ObjectBase*> scene_objects;
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere));
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_torus));
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_plane));
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere2));
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere3));

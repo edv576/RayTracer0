@@ -8,78 +8,92 @@
 #include "Vect.h"
 #include "Color.h"
 #include "Material.h"
+#include "algebra.h"
 
 class Torus : public ObjectBase
 {
 
 	Vect center;
 	double radius;
+	double Radius;
 	Color color;
 	Material material;
 public:
 	Torus();
-	Torus(Vect, double, Color, Material);
+	Torus(Vect, double, double, Color, Material);
 	~Torus();
 
 	Vect getTorusCenter() { return center; }
 	double getTorusRadius() { return radius; }
+	double getTorusRadius2() { return Radius; }
 	virtual Color getColor() { return color; }
 	virtual Material getMaterial() { return material; }
 
 	virtual Vect getNormalAt(Vect point) {
-		Vect normal_vect = point.vectAdd(center.negative()).normalize();
-		return normal_vect;
+		const double a = 1.0 - (Radius / sqrt(point.getVectX()*point.getVectX() + point.getVectY()*point.getVectY()));
+		return Vect(a*point.getVectX(), a*point.getVectY(), point.getVectZ()).normalize();
 
 	}
 
 	virtual double findIntersection(Ray ray) {
 
 		Vect ray_origin = ray.getRayOrigin();
-
-		double ray_origin_x = ray_origin.getVectX();
-		double ray_origin_y = ray_origin.getVectY();
-		double ray_origin_z = ray_origin.getVectZ();
-
 		Vect ray_direction = ray.getRayDirection();
-		double ray_direction_x = ray_direction.getVectX();
-		double ray_direction_y = ray_direction.getVectY();
-		double ray_direction_z = ray_direction.getVectZ();
+		double uArray[4];
 
-		Vect Torus_center = center;
-		double Torus_center_x = Torus_center.getVectX();
-		double Torus_center_y = Torus_center.getVectY();
-		double Torus_center_z = Torus_center.getVectZ();
+		const double T = 4.0 * Radius * Radius;
+		const double G = T * (ray_direction.getVectX()*ray_direction.getVectX() + ray_direction.getVectY()*ray_direction.getVectY());
+		const double H = 2.0 * T * (ray_origin.getVectX()*ray_origin.getVectX() + ray_origin.getVectY()*ray_origin.getVectY());
+		const double I = T * (ray_origin.getVectX()*ray_origin.getVectX() + ray_origin.getVectY()*ray_origin.getVectY());
+		const double J = 1;
+		const double K = 2.0 * ray_origin.dotProduct(ray_direction);
+		const double L = ray_origin.magnitude() * ray_origin.magnitude() + Radius*Radius - radius*radius;
 
-		double a = 1; //normalized
-		double b = (2 * (ray_origin_x - Torus_center_x)*ray_direction_x) + (2 * (ray_origin_y - Torus_center_y)*ray_direction_y) +
-			(2 * (ray_origin_z - Torus_center_z)*ray_direction_z);
-		double c = pow(ray_origin_x - Torus_center_x, 2) + pow(ray_origin_y - Torus_center_y, 2) + pow(ray_origin_z - Torus_center_z, 2) - (radius*radius);
+		const int numRealRoots = Algebra::SolveQuarticEquation(
+			J*J,                    // coefficient of u^4
+			2.0*J*K,                // coefficient of u^3
+			2.0*J*L + K*K - G,      // coefficient of u^2
+			2.0*K*L - H,            // coefficient of u^1 = u
+			L*L - I,                // coefficient of u^0 = constant term
+			uArray                  // receives 0..4 real solutions
+		);
 
-		double discriminant = b*b - 4 * c;
-
-		if (discriminant > 0) {
-
-			double root_1 = ((-1 * b - sqrt(discriminant)) / 2) - 0.000001;
-
-			if (root_1 > 0) {
-				//the first root is the smallest positive root
-				return root_1;
-
-			}
-			else
+		// We need to keep only the real roots.
+		// There can be significant roundoff error in quartic solver, 
+		// so we have to tolerate more slop than usual.
+		const double SURFACE_TOLERANCE = 1.0e-4;
+		int numPositiveRoots = 0;
+		for (int i = 0; i < numRealRoots; ++i)
+		{
+			// Compact the array...
+			if (uArray[i] > SURFACE_TOLERANCE)
 			{
-				//the second root is the smallest positive root
-				double root_2 = ((sqrt(discriminant) - b) / 2) - 0.000001;
-				return root_2;
+				uArray[numPositiveRoots++] = uArray[i];
 			}
+		}
+
+		if(numPositiveRoots == 0) {
+			return -1;
 
 		}
 		else
 		{
-			//the ray missed the Torus
-			return -1;
+			double minRoot = uArray[0];
 
+			for (int i = 0; i < numPositiveRoots; i++) {
+
+				if (minRoot < uArray[i]) {
+					minRoot = uArray[i];
+
+				}
+
+			}
+
+			return minRoot;
 		}
+
+		
+	
 
 
 	}
@@ -93,14 +107,16 @@ Torus::Torus()
 {
 	center = Vect(0, 0, 0);
 	radius = 1;
+	Radius = 2;
 	color = Color(0.5, 0.5, 0.5, 0);
 	material = Material(1, 0, 0, Color(0.5, 0.5, 0.5, 0));
 }
 
-Torus::Torus(Vect centerValue, double radiusValue, Color colorValue, Material materialValue)
+Torus::Torus(Vect centerValue, double radiusValue, double radiusValue2, Color colorValue, Material materialValue)
 {
 	center = centerValue;
 	radius = radiusValue;
+	Radius = radiusValue2;
 	color = colorValue;
 	material = materialValue;
 
