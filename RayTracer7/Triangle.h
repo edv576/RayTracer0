@@ -46,7 +46,6 @@ public:
 		double a = ray_direction.dotProduct(normal);
 
 		if (a == 0) {
-			//ray parallel to Triangle
 			return -1;
 
 		}

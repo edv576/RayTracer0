@@ -163,7 +163,6 @@ void Renderer::saveBMP(const char *filename, int w, int h, int dpi, RGBType *dat
 }
 
 int Renderer::winningObjectIndex(std::vector<double> object_intersections) {
-	//return index of the winning intersection
 	int index_of_minimum_value;
 
 
@@ -180,15 +179,14 @@ int Renderer::winningObjectIndex(std::vector<double> object_intersections) {
 		}
 		else
 		{
-			//otherwise the only value is negative
+
 			return -1;
 		}
 
 	}
 	else
 	{
-		//otherwise there is more than one intersection
-		//find the maximum one
+
 		double max = 0;
 
 		for (int i = 0; i < object_intersections.size(); i++) {
@@ -213,7 +211,7 @@ int Renderer::winningObjectIndex(std::vector<double> object_intersections) {
 		}
 		else
 		{
-			//all the intersections were negative
+
 			return -1;
 		}
 
@@ -230,7 +228,7 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 	Vect winning_object_normal = scene_objects.at(index_of_winning_object)->getNormalAt(intersection_position);
 
 	if (winning_object_color.getColorSpecial() == 2) {
-		// checkered/tile floor pattern
+		// checkered floor
 
 		int square = (int)floor(intersection_position.getVectX()) + (int)floor(intersection_position.getVectZ());
 
@@ -253,7 +251,6 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 	if (winning_object_material.getMaterialType() == 2)
 	{
 		if (winning_object_material.getReflectionValue() > 0 && winning_object_material.getReflectionValue() <= 1) {
-			// reflection from objects with specular intensity
 			double dot1 = winning_object_normal.dotProduct(intersecting_ray_direction.negative());
 			Vect scalar1 = winning_object_normal.vectMult(dot1);
 			Vect add1 = scalar1.vectAdd(intersecting_ray_direction);
@@ -296,7 +293,6 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 		float cosine_angle = winning_object_normal.dotProduct(light_direction);
 
 		if (cosine_angle > 0) {
-			// test for shadows
 			bool shadowed = false;
 
 			Vect distance_to_light = light_sources.at(light_index)->getLightPosition().vectAdd(intersection_position.negative());
@@ -382,7 +378,6 @@ void Renderer::render() {
 
 	Vect camdir = diff_btw.negative().normalize();
 	camdir = camDir;
-	//Vect camdir = Vect(0, 0, -1);
 	
 
 	Vect camright = Y.crossProduct(camdir).normalize();
@@ -447,7 +442,7 @@ void Renderer::render() {
 
 					if (aadepth == 1)
 					{
-						// begin with no anti aliasing
+						// with no anti aliasing
 
 						if (width > height)
 						{
@@ -469,7 +464,8 @@ void Renderer::render() {
 					}
 					else
 					{
-						// anti-aliasing
+						// with anti-aliasing
+						// using this will make the render time longer 
 						if (width > height) {
 							xamnt = ((x + (double)aax / ((double)aadepth - 1)) / width)*aspectratio - (((width - height) / (double)height) / 2);
 							yamnt = ((height - y) + (double)aax / ((double)aadepth - 1)) / height;
@@ -501,8 +497,6 @@ void Renderer::render() {
 					}
 
 					int index_of_winning_object = winningObjectIndex(intersections);
-
-					//cout << index_of_winning_object;
 
 					if (index_of_winning_object == -1) {
 						tempRed[aa_index] = 0;

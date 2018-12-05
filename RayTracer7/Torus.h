@@ -49,23 +49,21 @@ public:
 		const double K = 2.0 * ray_origin.dotProduct(ray_direction);
 		const double L = ray_origin.magnitude() * ray_origin.magnitude() + Radius*Radius - radius*radius;
 
+		//gets real roots
 		const int numRealRoots = Algebra::SolveQuarticEquation(
-			J*J,                    // coefficient of u^4
-			2.0*J*K,                // coefficient of u^3
-			2.0*J*L + K*K - G,      // coefficient of u^2
-			2.0*K*L - H,            // coefficient of u^1 = u
-			L*L - I,                // coefficient of u^0 = constant term
-			uArray                  // receives 0..4 real solutions
+			J*J,                   
+			2.0*J*K,               
+			2.0*J*L + K*K - G,      
+			2.0*K*L - H,        
+			L*L - I,                
+			uArray                  
 		);
 
-		// We need to keep only the real roots.
-		// There can be significant roundoff error in quartic solver, 
-		// so we have to tolerate more slop than usual.
+
 		const double SURFACE_TOLERANCE = 1.0e-4;
 		int numPositiveRoots = 0;
 		for (int i = 0; i < numRealRoots; ++i)
 		{
-			// Compact the array...
 			if (uArray[i] > SURFACE_TOLERANCE)
 			{
 				uArray[numPositiveRoots++] = uArray[i];

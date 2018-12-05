@@ -209,6 +209,7 @@ namespace RayTracer7 {
 			this->txtCameraPositionX->Size = System::Drawing::Size(61, 22);
 			this->txtCameraPositionX->TabIndex = 6;
 			this->txtCameraPositionX->Text = L"0";
+			this->txtCameraPositionX->TextChanged += gcnew System::EventHandler(this, &MyForm::txtCameraPositionX_TextChanged);
 			this->txtCameraPositionX->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtCameraPositionX_KeyPress);
 			// 
 			// txtCameraPositionZ
@@ -228,6 +229,7 @@ namespace RayTracer7 {
 			this->txtCameraPositionY->Size = System::Drawing::Size(61, 22);
 			this->txtCameraPositionY->TabIndex = 8;
 			this->txtCameraPositionY->Text = L"0.5";
+			this->txtCameraPositionY->TextChanged += gcnew System::EventHandler(this, &MyForm::txtCameraPositionY_TextChanged);
 			this->txtCameraPositionY->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtCameraPositionY_KeyPress);
 			// 
 			// btnLessPositionX
@@ -327,6 +329,7 @@ namespace RayTracer7 {
 			this->txtCameraDirectionX->Size = System::Drawing::Size(61, 22);
 			this->txtCameraDirectionX->TabIndex = 19;
 			this->txtCameraDirectionX->Text = L"0";
+			this->txtCameraDirectionX->TextChanged += gcnew System::EventHandler(this, &MyForm::txtCameraDirectionX_TextChanged);
 			this->txtCameraDirectionX->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtCameraDirectionX_KeyPress);
 			// 
 			// lblCameraDirectionY
@@ -386,6 +389,7 @@ namespace RayTracer7 {
 			this->txtHeight->Size = System::Drawing::Size(61, 22);
 			this->txtHeight->TabIndex = 29;
 			this->txtHeight->Text = L"480";
+			this->txtHeight->TextChanged += gcnew System::EventHandler(this, &MyForm::txtHeight_TextChanged);
 			// 
 			// txtWidth
 			// 
@@ -394,6 +398,7 @@ namespace RayTracer7 {
 			this->txtWidth->Size = System::Drawing::Size(61, 22);
 			this->txtWidth->TabIndex = 28;
 			this->txtWidth->Text = L"640";
+			this->txtWidth->TextChanged += gcnew System::EventHandler(this, &MyForm::txtWidth_TextChanged);
 			this->txtWidth->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::txtWidth_KeyPress);
 			// 
 			// lblHeight
@@ -534,6 +539,11 @@ private: System::Void btnLessPositionZ_Click(System::Object^  sender, System::Ev
 	txtCameraPositionZ->Text = System::Convert::ToString(valueZ);
 }
 private: System::Void txtCameraPositionZ_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	if ((txtCameraPositionZ->TextLength == 0) || (txtCameraPositionZ->Text == " ")) {
+
+		txtCameraPositionZ->Text = "0";
+
+	}
 }
 private: System::Void btnMoreDirectionX_Click(System::Object^  sender, System::EventArgs^  e) {
 	double valueX = System::Convert::ToDouble(txtCameraDirectionX->Text);
@@ -623,6 +633,11 @@ private: System::Void txtCameraDirectionX_KeyPress(System::Object^  sender, Syst
 	}
 }
 private: System::Void txtCameraDirectionY_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	if ((txtCameraDirectionY->TextLength == 0) || (txtCameraDirectionY->Text == " ")) {
+
+		txtCameraDirectionY->Text = "0";
+
+	}
 }
 private: System::Void txtCameraDirectionY_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
 
@@ -644,6 +659,42 @@ private: System::Void txtWidth_KeyPress(System::Object^  sender, System::Windows
 
 	if (!Char::IsDigit(e->KeyChar) && e->KeyChar != 0x08) {
 		e->Handled = true;
+	}
+}
+private: System::Void txtCameraPositionX_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	if ((txtCameraPositionX->TextLength == 0) || (txtCameraPositionX->Text == " ")) {
+
+		txtCameraPositionX->Text = "0";
+
+	}
+}
+private: System::Void txtCameraPositionY_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	if ((txtCameraPositionY->TextLength == 0) || (txtCameraPositionY->Text == " ")) {
+
+		txtCameraPositionY->Text = "0";
+
+	}
+}
+private: System::Void txtCameraDirectionX_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	if ((txtCameraDirectionX->TextLength == 0) || (txtCameraDirectionX->Text == " ")) {
+
+		txtCameraDirectionX->Text = "0";
+
+	}
+}
+private: System::Void txtWidth_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	if ((txtWidth->TextLength == 0) || (txtWidth->Text == " ")) {
+
+		txtWidth->Text = "0";
+
+	}
+
+}
+private: System::Void txtHeight_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	if ((txtHeight->TextLength == 0) || (txtHeight->Text == " ")) {
+
+		txtHeight->Text = "0";
+
 	}
 }
 };
