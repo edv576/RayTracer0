@@ -26,10 +26,13 @@
 #include "Source.h"
 #include "Triangle.h"
 #include "Torus.h"
+#include "Matrix44.h"
 
 #pragma warning(disable : 4996)
 
 //using namespace std;
+
+using Matrix44f = Matrix44<float>;
 
 struct RGBType
 {
@@ -59,6 +62,8 @@ public:
 	void setLookAt(double valX, double valY, double valZ) {
 
 		lookAt = Vect(valX, valY, valZ);
+
+
 	}
 
 	void setCamDir(double anglesX, double anglesY, double anglesZ) {
@@ -393,6 +398,7 @@ void Renderer::render() {
 	Color orange(0.94, 0.75, 0.31, 0);
 	Color orange_reflective(0.94, 0.75, 0.31, 0.2);
 	Color check_floor(1, 1, 1, 2);
+	Color blue_floor(0.298, 0.475, 0.937, 0);
 
 	Vect light_position(-7, 10, -10);
 	Light scene_light(light_position, white_light);
@@ -409,16 +415,22 @@ void Renderer::render() {
 	Sphere scene_sphere3(new_sphere_position2, 0.5, orange_reflective, Material(2, 0.2, 0, orange_reflective));
 	Sphere scene_sphere4(new_sphere_position3, 0.5, grey, Material(1, 0.2, 0, grey));
 	Triangle scene_triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange, Material(1, 0, 0, orange));
+	Triangle scene_floor1(Vect(-5, -1.5, -2), Vect(5, -1.5, -3), Vect(-5, -1.5, 5), blue_floor, Material(1, 0, 0, blue_floor));
+	Triangle scene_floor2(Vect(-5, -1.5, 5), Vect(5, -1.5, 5), Vect(5, -1.5, -3), blue_floor, Material(1, 0, 0, blue_floor));
+	Triangle scene_floor3(Vect(0, -1.5, 20), Vect(-20, -1.5, -20), Vect(20, -1.5, -20), blue_floor, Material(1, 0, 0, blue_floor));
 
 	std::vector<ObjectBase*> scene_objects;
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere));
 	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_torus));
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_plane));
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_plane));
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere2));
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere3));
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere4));
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_triangle));
-
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_triangle));
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor1));
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor2));
+	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor3));
+	
 	double xamnt, yamnt;
 	int thisone, aa_index;
 

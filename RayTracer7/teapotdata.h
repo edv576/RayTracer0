@@ -1,6 +1,17 @@
 
 // Teapot data
 
+#include <atomic>
+#include <memory>
+#include <cassert>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <limits>
+#include <cmath>
+#include <chrono>
+#include <queue>
+
 const static uint16_t kTeapotNumPatches = 32;
 const static uint16_t kTeapotNumVertices = 306;
 uint32_t teapotPatches[kTeapotNumPatches][16] = {

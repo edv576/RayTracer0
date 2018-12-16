@@ -68,6 +68,12 @@
     <ClInclude Include="algebra.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="teapotdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix44.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MyForm.resx">
