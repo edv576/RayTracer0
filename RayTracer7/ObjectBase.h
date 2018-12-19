@@ -8,6 +8,7 @@
 #include "Color.h"
 #include "Ray.h"
 #include "Material.h"
+#include "Vect.h"
 
 class ObjectBase
 {
@@ -21,11 +22,12 @@ public:
 
 	virtual Vect getNormalAt(Vect point) { return Vect(0, 0, 0); }
 
-
 	virtual double findIntersection(Ray ray) {
 
 		return 0;
 	}
+
+	std::vector<Vect> vertexPool;
 
 private:
 
@@ -33,6 +35,8 @@ private:
 
 ObjectBase::ObjectBase()
 {
+	vertexPool.push_back(Vect(0.0, 0.0, 0.0));
+
 }
 
 

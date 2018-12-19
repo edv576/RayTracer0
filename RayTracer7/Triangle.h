@@ -109,6 +109,10 @@ Triangle::Triangle()
 	normal = CA.crossProduct(BA).normalize();
 	distance = normal.dotProduct(A);
 
+	vertexPool.push_back(A);
+	vertexPool.push_back(B);
+	vertexPool.push_back(C);
+
 }
 
 Triangle::Triangle(Vect pointA, Vect pointB, Vect pointC, Color colorValue, Material materialValue)

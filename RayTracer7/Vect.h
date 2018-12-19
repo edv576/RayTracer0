@@ -24,6 +24,9 @@ class Vect
 		double getVectX() { return x; }
 		double getVectY() { return y; }
 		double getVectZ() { return z; }
+		void setVectX(double value) { x = value; }
+		void setVectY(double value) { y = value; }
+		void setVectZ(double value) { z = value; }
 
 		double magnitude() {
 

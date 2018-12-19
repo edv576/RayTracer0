@@ -27,6 +27,8 @@
 #include "Triangle.h"
 #include "Torus.h"
 #include "Matrix44.h"
+#include "AccelerationStructure.h"
+#include "BVH.h"
 
 #pragma warning(disable : 4996)
 
@@ -494,7 +496,7 @@ void Renderer::render() {
 					}
 
 
-
+					std::unique_ptr<AccelerationStructure> accel(new BVH(scene_objects));
 
 					Vect cam_ray_origin = scene_cam.getCameraPosition();
 					Vect cam_ray_direction = camdir.vectAdd(camright.vectMult(xamnt - 0.5).vectAdd(camdown.vectMult(yamnt - 0.5))).normalize();

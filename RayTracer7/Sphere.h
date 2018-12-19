@@ -101,6 +101,12 @@ Sphere::Sphere(Vect centerValue, double radiusValue, Color colorValue, Material 
 	color = colorValue;
 	material = materialValue;
 
+	vertexPool.push_back(center.vectAdd(Vect(0,radius,0)));
+	vertexPool.push_back(center.vectAdd(Vect(0, -radius, 0)));
+	vertexPool.push_back(center.vectAdd(Vect(radius, 0, 0)));
+	vertexPool.push_back(center.vectAdd(Vect(-radius, 0, 0)));
+	vertexPool.push_back(center.vectAdd(Vect(0, 0, radius)));
+	vertexPool.push_back(center.vectAdd(Vect(0, 0, -radius)));
 }
 
 Sphere::~Sphere()
