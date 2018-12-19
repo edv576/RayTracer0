@@ -232,7 +232,7 @@ class BVH : public AccelerationStructure
 	Octree* octree = nullptr;
 public:
 	BVH(std::vector<ObjectBase*> scene_objects);
-	bool intersect(const Vect&, const Vect&, const uint32_t&, float&) const;
+	bool intersect(const Vect&, const Vect&, double&, int&) const;
 	~BVH() { delete octree; }
 };
 
@@ -301,11 +301,12 @@ bool BVH::Extents::intersect(
 	return true;
 }
 
-bool BVH::intersect(const Vect& orig, const Vect& dir, const uint32_t& rayId, float& tHit) const
+bool BVH::intersect(const Vect& orig, const Vect& dir, double& tHit, int& index) const
 {
 	tHit = kInfinity;
+	index = -1;
 	Vect temp;
-	const ObjectBase* intersectedObject = nullptr;
+	ObjectBase* intersectedObject = nullptr;
 	float precomputedNumerator[BVH::kNumPlaneSetNormals];
 	float precomputedDenominator[BVH::kNumPlaneSetNormals];
 	for (uint8_t i = 0; i < kNumPlaneSetNormals; ++i) {
@@ -350,6 +351,8 @@ bool BVH::intersect(const Vect& orig, const Vect& dir, const uint32_t& rayId, fl
 				if ((tempIntersection != -1) && tempIntersection < tHit) {
 					tHit = tempIntersection;
 					intersectedObject = node->nodeExtentsList[i]->object;
+					index = intersectedObject->getIndex();
+				
 				}
 			}
 

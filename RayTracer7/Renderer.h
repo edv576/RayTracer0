@@ -419,19 +419,26 @@ void Renderer::render() {
 	Triangle scene_triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange, Material(1, 0, 0, orange));
 	Triangle scene_floor1(Vect(-5, -1.5, -2), Vect(5, -1.5, -3), Vect(-5, -1.5, 5), blue_floor, Material(1, 0, 0, blue_floor));
 	Triangle scene_floor2(Vect(-5, -1.5, 5), Vect(5, -1.5, 5), Vect(5, -1.5, -3), blue_floor, Material(1, 0, 0, blue_floor));
-	Triangle scene_floor3(Vect(0, -1.5, 20), Vect(-20, -1.5, -20), Vect(20, -1.5, -20), blue_floor, Material(1, 0, 0, blue_floor));
+	Triangle scene_floor3(Vect(0, -1.5, 20), Vect(-20, -1.6, -20), Vect(20, -1.6, -20), blue_floor, Material(1, 0, 0, blue_floor));
 
 	std::vector<ObjectBase*> scene_objects;
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere));
+	scene_sphere.setIndex(0);
+	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere));	
 	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_torus));
 	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_plane));
+	scene_sphere2.setIndex(1);
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere2));
+	scene_sphere3.setIndex(2);
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere3));
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere4));
+	scene_sphere4.setIndex(3);
+	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere4));	
 	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_triangle));
 	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor1));
 	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor2));
+	scene_floor3.setIndex(4);
 	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor3));
+	scene_triangle.setIndex(5);
+	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_triangle));
 	
 	double xamnt, yamnt;
 	int thisone, aa_index;
@@ -439,9 +446,11 @@ void Renderer::render() {
 	double tempRed[aadepth*aadepth];
 	double tempGreen[aadepth*aadepth];
 	double tempBlue[aadepth*aadepth];
+	std::unique_ptr<AccelerationStructure> accel(new BVH(scene_objects));
 
 	for (int x = 0; x < width; x++)
 	{
+		int p = 0;
 		for (int y = 0; y < height; y++)
 		{
 			//return color
@@ -496,23 +505,28 @@ void Renderer::render() {
 					}
 
 
-					std::unique_ptr<AccelerationStructure> accel(new BVH(scene_objects));
+					
 
 					Vect cam_ray_origin = scene_cam.getCameraPosition();
 					Vect cam_ray_direction = camdir.vectAdd(camright.vectMult(xamnt - 0.5).vectAdd(camdown.vectMult(yamnt - 0.5))).normalize();
 
 					Ray cam_ray = Ray(cam_ray_origin, cam_ray_direction);
 
-					std::vector<double> intersections;
+					//std::vector<double> intersections;
 
-					for (int index = 0; index < scene_objects.size(); index++) {
-						intersections.push_back(scene_objects.at(index)->findIntersection(cam_ray));
+					//for (int index = 0; index < scene_objects.size(); index++) {
+					//	intersections.push_back(scene_objects.at(index)->findIntersection(cam_ray));
 
-					}
+					//}
 
-					int index_of_winning_object = winningObjectIndex(intersections);
+					//int index_of_winning_object = winningObjectIndex(intersections);
+					
+					int index_of_winning_object;
 
-					if (index_of_winning_object == -1) {
+					double intersectionDistance;
+					bool foundIntersection = accel->intersect(cam_ray_origin, cam_ray_direction, intersectionDistance, index_of_winning_object);
+
+					if (!foundIntersection) {
 						tempRed[aa_index] = 0;
 						tempGreen[aa_index] = 0;
 						tempBlue[aa_index] = 0;
@@ -520,21 +534,45 @@ void Renderer::render() {
 					}
 					else
 					{
-						if (intersections.at(index_of_winning_object) > accuracy) {
+						if (intersectionDistance > accuracy) {
 
-							Vect intersection_position = cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)));
+							Vect intersection_position = cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersectionDistance));
 							Vect intersecting_ray_direction = cam_ray_direction;
 
 							Color intersection_color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
 							tempRed[aa_index] = intersection_color.getColorRed();
 							tempGreen[aa_index] = intersection_color.getColorGreen();
 							tempBlue[aa_index] = intersection_color.getColorBlue();
-							
+
 						}
 
 
 
 					}
+
+					//if (index_of_winning_object == -1) {
+					//	tempRed[aa_index] = 0;
+					//	tempGreen[aa_index] = 0;
+					//	tempBlue[aa_index] = 0;
+
+					//}
+					//else
+					//{
+					//	if (intersections.at(index_of_winning_object) > accuracy) {
+
+					//		Vect intersection_position = cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersections.at(index_of_winning_object)));
+					//		Vect intersecting_ray_direction = cam_ray_direction;
+
+					//		Color intersection_color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
+					//		tempRed[aa_index] = intersection_color.getColorRed();
+					//		tempGreen[aa_index] = intersection_color.getColorGreen();
+					//		tempBlue[aa_index] = intersection_color.getColorBlue();
+					//		
+					//	}
+
+
+
+					//}
 
 
 				}

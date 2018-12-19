@@ -27,9 +27,20 @@ public:
 		return 0;
 	}
 
+	virtual void setIndex(int i) {
+
+		index = i;
+	}
+
+	virtual int getIndex() {
+		return index;
+	}
+
 	std::vector<Vect> vertexPool;
 
 private:
+	int index;
+
 
 };
 

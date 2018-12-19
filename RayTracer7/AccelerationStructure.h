@@ -60,6 +60,11 @@ public:
 		winningObject = wO;
 		return t;
 	}
+
+	virtual bool intersect(const Vect& orig, const Vect& dir, double& tHit, int& index) const {
+
+		return false;
+	}
 protected:
 	std::vector<ObjectBase*> objects;
 };
