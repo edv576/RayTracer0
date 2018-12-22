@@ -20,13 +20,13 @@ class BBox
 {
 public:
 	BBox() {}
-	BBox(Vect min_, Vect max_)
+	BBox(Vect minimun, Vect maximum)
 	{
 		
-		bounds[0] = min_;
-		bounds[1] = max_;
+		bounds[0] = minimun;
+		bounds[1] = maximum;
 	}
-	BBox& extendBy(const Vect& p)
+	BBox& extensionBy(const Vect& p)
 	{
 		if (p.x < bounds[0].x) bounds[0].x = p.x;
 		if (p.y < bounds[0].y) bounds[0].y = p.y;
@@ -37,17 +37,16 @@ public:
 
 		return *this;
 	}
-	/*inline */ Vect centroid()  { return (bounds[0].vectAdd(bounds[1]).vectMult(0.5)); }
+	Vect centroid()  { return (bounds[0].vectAdd(bounds[1]).vectMult(0.5)); }
 	Vect& operator [] (bool i) { return bounds[i]; }
 	const Vect operator [] (bool i) const { return bounds[i]; }
-	bool intersect(const Vect&, const Vect&, const VectB&, float&) const;
-	Vect bounds[2] = { Vect(kInfinity,kInfinity,kInfinity), Vect(-kInfinity, -kInfinity,-kInfinity) };
+	bool intersect(const Vect&, const Vect&, const VectB&, double&) const;
+	Vect bounds[2] = { Vect(infinityD,infinityD,infinityD), Vect(-infinityD, -infinityD,-infinityD) };
 };
 
 template<typename T>
-bool BBox<T>::intersect(const Vect& orig, const Vect& invDir, const VectB& sign, float& tHit) const
+bool BBox<T>::intersect(const Vect& orig, const Vect& invDir, const VectB& sign, double& tHit) const
 {
-	//numRayBBoxTests++;
 	float tmin, tmax, tymin, tymax, tzmin, tzmax;
 	
 

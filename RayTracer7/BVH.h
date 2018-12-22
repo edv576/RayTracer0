@@ -23,7 +23,7 @@
 //using Matrix44f = Matrix44<float>;
 
 
-//const float kInfinity = std::numeric_limits<float>::max();
+//const float infinityD = std::numeric_limits<float>::max();
 
 class BVH : public AccelerationStructure
 {
@@ -34,7 +34,7 @@ class BVH : public AccelerationStructure
 		Extents()
 		{
 			for (uint8_t i = 0; i < kNumPlaneSetNormals; ++i)
-				d[i][0] = kInfinity, d[i][1] = -kInfinity;
+				d[i][0] = infinityD, d[i][1] = -infinityD;
 		}
 		void extendBy(const Extents& e)
 		{
@@ -136,7 +136,7 @@ class BVH : public AccelerationStructure
 				Vect extentsCentroid = extents->centroid();
 				Vect v0 = bbox[0];
 				Vect v1 = bbox[1];
-				Vect nodeCentroid = v0.vectAdd(v1);
+				Vect nodeCentroid = v0.vectAdd(v1).vectMult(0.5);
 				//Vect nodeCentroid = (bbox[0] + bbox[1]) * 0.5;
 				BBox<> childBBox;
 				uint8_t childIndex = 0;
@@ -232,7 +232,7 @@ class BVH : public AccelerationStructure
 	Octree* octree = nullptr;
 public:
 	BVH(std::vector<ObjectBase*> scene_objects);
-	bool intersect(const Vect&, const Vect&, double&, int&) const;
+	bool Intersect(const Vect&, const Vect&, double&, int&) const;
 	~BVH() { delete octree; }
 };
 
@@ -301,9 +301,9 @@ bool BVH::Extents::intersect(
 	return true;
 }
 
-bool BVH::intersect(const Vect& orig, const Vect& dir, double& tHit, int& index) const
+bool BVH::Intersect(const Vect& orig, const Vect& dir, double& tHit, int& index) const
 {
-	tHit = kInfinity;
+	tHit = infinityD;
 	index = -1;
 	Vect temp;
 	ObjectBase* intersectedObject = nullptr;
@@ -316,10 +316,10 @@ bool BVH::intersect(const Vect& orig, const Vect& dir, double& tHit, int& index)
 	}
 
 	/*
-	tNear = kInfinity; // set
+	tNear = infinityD; // set
 	for (uint32_t i = 0; i < meshes.size(); ++i) {
 	numRayVolumeTests++;
-	float tn = -kInfinity, tf = kInfinity;
+	float tn = -infinityD, tf = infinityD;
 	uint8_t planeIndex;
 	if (extents[i].intersect(precomputedNumerator, precomputedDenominator, tn, tf, planeIndex)) {
 	if (tn < tNear) {
@@ -332,7 +332,7 @@ bool BVH::intersect(const Vect& orig, const Vect& dir, double& tHit, int& index)
 	*/
 
 	uint8_t planeIndex;
-	float tNear = 0, tFar = kInfinity; // tNear, tFar for the intersected extents
+	float tNear = 0, tFar = infinityD; // tNear, tFar for the intersected extents
 	if (!octree->root->nodeExtents.intersect(precomputedNumerator, precomputedDenominator, tNear, tFar, planeIndex) || tFar < 0)
 		return false;
 	tHit = tFar;
@@ -346,7 +346,7 @@ bool BVH::intersect(const Vect& orig, const Vect& dir, double& tHit, int& index)
 		if (node->isLeaf) {
 			for (int i = 0; i < node->nodeExtentsList.size(); i++)
 			{
-				float t = kInfinity;
+				float t = infinityD;
 				tempIntersection = node->nodeExtentsList[i]->object->findIntersection(Ray(orig, dir));
 				if ((tempIntersection != -1) && tempIntersection < tHit) {
 					tHit = tempIntersection;

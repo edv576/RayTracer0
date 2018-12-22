@@ -29,6 +29,9 @@
 #include "Matrix44.h"
 #include "AccelerationStructure.h"
 #include "BVH.h"
+#include "BoundingVolumeH.h"
+#include "BoundingVolumeH2.h"
+#include <windows.h>
 
 #pragma warning(disable : 4996)
 
@@ -88,11 +91,12 @@ public:
 
 	void saveBMP(const char *, int, int, int, RGBType *);
 	int winningObjectIndex(std::vector<double>);
-	Color getColorAt(Vect, Vect, std::vector<ObjectBase*>, int, std::vector<Source*>, double, double);
+	Color getColorAt(Vect, Vect, std::vector<ObjectBase*>, int, std::vector<Source*>, double, double, std::unique_ptr<AccelerationStructure>&);
 	void render();
 
 
 private:
+	int px, py, debStep;
 
 };
 
@@ -104,6 +108,9 @@ Renderer::Renderer()
 	camDir = Vect(0, 0, 1);
 	width = 640;
 	height = 480;
+	py = 0;
+	px = 0;
+	debStep = 0;
 }
 
 void Renderer::saveBMP(const char *filename, int w, int h, int dpi, RGBType *data)
@@ -228,11 +235,27 @@ int Renderer::winningObjectIndex(std::vector<double> object_intersections) {
 
 }
 
-Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_direction, std::vector<ObjectBase*> scene_objects, int index_of_winning_object, std::vector<Source*> light_sources, double accuracy, double ambientlight) {
+Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_direction, std::vector<ObjectBase*> scene_objects, int index_of_winning_object, std::vector<Source*> light_sources, double accuracy, double ambientlight, std::unique_ptr<AccelerationStructure>& accel) {
 
 	Material winning_object_material = scene_objects.at(index_of_winning_object)->getMaterial();
 	Color winning_object_color = scene_objects.at(index_of_winning_object)->getMaterial().getColor();
 	Vect winning_object_normal = scene_objects.at(index_of_winning_object)->getNormalAt(intersection_position);
+
+	if ((px == 55) && (py = 127)) {
+
+		debStep++;
+		char buffer[100];
+		sprintf(buffer, "My variable is %d\n", debStep);
+		//OutputDebugString(buffer);
+		OutputDebugStringA(buffer);
+
+	}
+
+	if (debStep == 330)
+	{
+		int xe = 0;
+
+	}
 
 	if (winning_object_color.getColorSpecial() == 2) {
 		// checkered floor
@@ -268,27 +291,47 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 			Ray reflection_ray(intersection_position, reflection_direction);
 
 			// determine what the ray intersects with first
-			std::vector<double> reflection_intersections;
+			//std::vector<double> reflection_intersections;
 
-			for (int reflection_index = 0; reflection_index < scene_objects.size(); reflection_index++) {
-				reflection_intersections.push_back(scene_objects.at(reflection_index)->findIntersection(reflection_ray));
-			}
+			//for (int reflection_index = 0; reflection_index < scene_objects.size(); reflection_index++) {
+			//	reflection_intersections.push_back(scene_objects.at(reflection_index)->findIntersection(reflection_ray));
+			//}
 
-			int index_of_winning_object_with_reflection = winningObjectIndex(reflection_intersections);
+			int index_of_winning_object_with_reflection;
 
-			if (index_of_winning_object_with_reflection != -1) {
-				if (reflection_intersections.at(index_of_winning_object_with_reflection) > accuracy) {
+			double intersectionDistance;
+			bool foundIntersection = accel->Intersect(intersection_position, reflection_direction, intersectionDistance, index_of_winning_object_with_reflection);
+
+
+			//int index_of_winning_object_with_reflection = winningObjectIndex(reflection_intersections);
+
+			if (foundIntersection) {
+				if (intersectionDistance > accuracy) {
 					// determine the position and direction at the point of intersection with the reflection ray
 					// the ray only affects the color if it reflected off something
 
-					Vect reflection_intersection_position = intersection_position.vectAdd(reflection_direction.vectMult(reflection_intersections.at(index_of_winning_object_with_reflection)));
+					Vect reflection_intersection_position = intersection_position.vectAdd(reflection_direction.vectMult(intersectionDistance));
 					Vect reflection_intersection_ray_direction = reflection_direction;
 
-					Color reflection_intersection_color = getColorAt(reflection_intersection_position, reflection_intersection_ray_direction, scene_objects, index_of_winning_object_with_reflection, light_sources, accuracy, ambientlight);
+					Color reflection_intersection_color = getColorAt(reflection_intersection_position, reflection_intersection_ray_direction, scene_objects, index_of_winning_object_with_reflection, light_sources, accuracy, ambientlight, accel);
 
 					final_color = final_color.colorAdd(reflection_intersection_color.colorScalar(winning_object_material.getReflectionValue()));
 				}
 			}
+
+			//if (index_of_winning_object_with_reflection != -1) {
+			//	if (reflection_intersections.at(index_of_winning_object_with_reflection) > accuracy) {
+			//		// determine the position and direction at the point of intersection with the reflection ray
+			//		// the ray only affects the color if it reflected off something
+
+			//		Vect reflection_intersection_position = intersection_position.vectAdd(reflection_direction.vectMult(reflection_intersections.at(index_of_winning_object_with_reflection)));
+			//		Vect reflection_intersection_ray_direction = reflection_direction;
+
+			//		Color reflection_intersection_color = getColorAt(reflection_intersection_position, reflection_intersection_ray_direction, scene_objects, index_of_winning_object_with_reflection, light_sources, accuracy, ambientlight, accel);
+
+			//		final_color = final_color.colorAdd(reflection_intersection_color.colorScalar(winning_object_material.getReflectionValue()));
+			//	}
+			//}
 		}
 	}
 
@@ -416,7 +459,7 @@ void Renderer::render() {
 	Sphere scene_sphere2(new_sphere_position, 0.5, grey, Material(1, 0, 0, grey));
 	Sphere scene_sphere3(new_sphere_position2, 0.5, orange_reflective, Material(2, 0.2, 0, orange_reflective));
 	Sphere scene_sphere4(new_sphere_position3, 0.5, grey, Material(1, 0.2, 0, grey));
-	Triangle scene_triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange, Material(1, 0, 0, orange));
+	Triangle scene_triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange_reflective, Material(2, 0.2, 0, orange_reflective));
 	Triangle scene_floor1(Vect(-5, -1.5, -2), Vect(5, -1.5, -3), Vect(-5, -1.5, 5), blue_floor, Material(1, 0, 0, blue_floor));
 	Triangle scene_floor2(Vect(-5, -1.5, 5), Vect(5, -1.5, 5), Vect(5, -1.5, -3), blue_floor, Material(1, 0, 0, blue_floor));
 	Triangle scene_floor3(Vect(0, -1.5, 20), Vect(-20, -1.6, -20), Vect(20, -1.6, -20), blue_floor, Material(1, 0, 0, blue_floor));
@@ -446,7 +489,9 @@ void Renderer::render() {
 	double tempRed[aadepth*aadepth];
 	double tempGreen[aadepth*aadepth];
 	double tempBlue[aadepth*aadepth];
-	std::unique_ptr<AccelerationStructure> accel(new BVH(scene_objects));
+	//std::unique_ptr<AccelerationStructure> accel(new BVH(scene_objects));
+	//std::unique_ptr<AccelerationStructure> accel(new BoundingVolumeH(scene_objects));
+	std::unique_ptr<AccelerationStructure> accel(new BoundingVolumeH2(scene_objects));
 
 	for (int x = 0; x < width; x++)
 	{
@@ -505,7 +550,13 @@ void Renderer::render() {
 					}
 
 
-					
+					if ((x == 55) && (y == 127))
+					{
+						px = x;
+						py = y;
+						int h = 0;
+
+					}
 
 					Vect cam_ray_origin = scene_cam.getCameraPosition();
 					Vect cam_ray_direction = camdir.vectAdd(camright.vectMult(xamnt - 0.5).vectAdd(camdown.vectMult(yamnt - 0.5))).normalize();
@@ -524,7 +575,18 @@ void Renderer::render() {
 					int index_of_winning_object;
 
 					double intersectionDistance;
-					bool foundIntersection = accel->intersect(cam_ray_origin, cam_ray_direction, intersectionDistance, index_of_winning_object);
+					bool foundIntersection;
+
+					try
+					{
+						foundIntersection = accel->Intersect(cam_ray_origin, cam_ray_direction, intersectionDistance, index_of_winning_object);
+
+					}
+					catch (const std::exception&)
+					{
+						int z = 0;
+					}
+				
 
 					if (!foundIntersection) {
 						tempRed[aa_index] = 0;
@@ -539,7 +601,34 @@ void Renderer::render() {
 							Vect intersection_position = cam_ray_origin.vectAdd(cam_ray_direction.vectMult(intersectionDistance));
 							Vect intersecting_ray_direction = cam_ray_direction;
 
-							Color intersection_color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight);
+							if (intersection_position.getVectZ() < 0)
+							{
+								int p = 0;
+
+							}
+
+							Color intersection_color;
+
+							try
+							{
+								intersection_color = getColorAt(intersection_position, intersecting_ray_direction, scene_objects, index_of_winning_object, light_sources, accuracy, ambientlight, accel);
+								std::cout << x;
+								std::string s = std::to_string(x);
+								char buffer[100];
+								sprintf(buffer, "My variable is %d\n", x);
+								//OutputDebugString(buffer);
+								OutputDebugStringA(buffer);
+								sprintf(buffer, "My variable is %d\n", y);
+								OutputDebugStringA(buffer);
+							
+
+							}
+							catch (const std::exception&)
+							{
+								int c = 0;
+							}
+
+							
 							tempRed[aa_index] = intersection_color.getColorRed();
 							tempGreen[aa_index] = intersection_color.getColorGreen();
 							tempBlue[aa_index] = intersection_color.getColorBlue();
