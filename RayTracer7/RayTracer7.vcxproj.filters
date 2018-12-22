@@ -77,16 +77,10 @@
     <ClInclude Include="AccelerationStructure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BVH.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BBOX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VectB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingVolumeH.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BoundingVolumeH2.h">

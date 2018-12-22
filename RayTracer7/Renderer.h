@@ -28,8 +28,6 @@
 #include "Torus.h"
 #include "Matrix44.h"
 #include "AccelerationStructure.h"
-#include "BVH.h"
-#include "BoundingVolumeH.h"
 #include "BoundingVolumeH2.h"
 #include <windows.h>
 
@@ -298,9 +296,9 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 			//}
 
 			int index_of_winning_object_with_reflection;
-
+			bool lookShadows = false;
 			double intersectionDistance;
-			bool foundIntersection = accel->Intersect(intersection_position, reflection_direction, intersectionDistance, index_of_winning_object_with_reflection);
+			bool foundIntersection = accel->Intersect(intersection_position, reflection_direction, intersectionDistance, index_of_winning_object_with_reflection, -1);
 
 
 			//int index_of_winning_object_with_reflection = winningObjectIndex(reflection_intersections);
@@ -576,10 +574,11 @@ void Renderer::render() {
 
 					double intersectionDistance;
 					bool foundIntersection;
+					bool lookShadows = false;
 
 					try
 					{
-						foundIntersection = accel->Intersect(cam_ray_origin, cam_ray_direction, intersectionDistance, index_of_winning_object);
+						foundIntersection = accel->Intersect(cam_ray_origin, cam_ray_direction, intersectionDistance, index_of_winning_object, -1);
 
 					}
 					catch (const std::exception&)

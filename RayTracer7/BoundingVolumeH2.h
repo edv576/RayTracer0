@@ -222,7 +222,7 @@ class BoundingVolumeH2 : public AccelerationStructure
 	OctreeH* octreeH = nullptr;
 public:
 	BoundingVolumeH2(std::vector<ObjectBase*> sceneObjects);
-	bool Intersect(const Vect&, const Vect&, double&, int&) const;
+	bool Intersect(const Vect&, const Vect&, double&, int&, double) const;
 	~BoundingVolumeH2() { delete octreeH; }
 };
 
@@ -295,7 +295,7 @@ bool BoundingVolumeH2::Extensions::intersect(
 	return true;
 }
 
-bool BoundingVolumeH2::Intersect(const Vect& orig, const Vect& dir, double& tH, int& index) const
+bool BoundingVolumeH2::Intersect(const Vect& orig, const Vect& dir, double& tH, int& index, double tLight) const
 {
 	tH = infinityD;
 	index = -1;
