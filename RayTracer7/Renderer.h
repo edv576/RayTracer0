@@ -349,8 +349,18 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 			Ray shadow_ray(intersection_position, light_sources.at(light_index)->getLightPosition().vectAdd(intersection_position.negative()).normalize());
 
 			std::vector<double> secondary_intersections;
+			bool foundIntersectionShadow = false;
+			double intersectionDistance;
+			int index_of_winning_object_shadow;
 
-			for (int object_index = 0; object_index < scene_objects.size() && shadowed == false; object_index++) {
+			if (shadowed == false)
+			{
+				//Looking for shadows with early break if found
+				foundIntersectionShadow = accel->Intersect(intersection_position, shadow_ray.getRayDirection(), intersectionDistance, index_of_winning_object_shadow, distance_to_light_magnitude);
+				shadowed = foundIntersectionShadow;
+			}
+
+			/*for (int object_index = 0; object_index < scene_objects.size() && shadowed == false; object_index++) {
 				secondary_intersections.push_back(scene_objects.at(object_index)->findIntersection(shadow_ray));
 			}
 
@@ -362,7 +372,7 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 					break;
 				}
 
-			}
+			}*/
 
 			if (shadowed == false) {
 				final_color = final_color.colorAdd(winning_object_color.colorMultiply(light_sources.at(light_index)->getLightColor()).colorScalar(cosine_angle));

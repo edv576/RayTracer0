@@ -330,6 +330,10 @@ bool BoundingVolumeH2::Intersect(const Vect& orig, const Vect& dir, double& tH, 
 				//double t = infinityD;
 				tempIntersection = node->nodeExtensionsList[i]->object->findIntersection(Ray(orig, dir));
 				if ((tempIntersection != -1) && (tempIntersection > accuracy) && (tempIntersection < tH)) {
+					if ((tLight > 0) && (tempIntersection < tLight))
+					{
+						return true;
+					}
 					tH = tempIntersection;
 					intersectedObject = node->nodeExtensionsList[i]->object;
 					index = intersectedObject->getIndex();
