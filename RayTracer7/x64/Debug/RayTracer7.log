@@ -5,10 +5,10 @@ d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Vect.h(77): warning C424
 d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Vect.h(95): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
 d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Vect.h(111): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
 d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\AccelerationStructure.h(39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(167): warning C4838: conversion from 'int' to 'unsigned char' requires a narrowing conversion
-d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(341): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(347): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(516): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(169): warning C4838: conversion from 'int' to 'unsigned char' requires a narrowing conversion
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(343): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(349): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(557): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Generating Code...
 d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\opencv\include\opencv2\core\cvstd.hpp(575): warning C4793: 'cv::String::String': function compiled as native:
   	Found an intrinsic not supported in managed code

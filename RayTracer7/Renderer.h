@@ -95,6 +95,9 @@ public:
 
 private:
 	int px, py, debStep;
+	void CreateScene();
+	void CreateTriangleScene();
+	std::vector<ObjectBase*> scene_objects;
 
 };
 
@@ -401,6 +404,48 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 
 }
 
+void Renderer::CreateScene() {
+
+	Vect O(0, 0, 0);
+	Vect X(1, 0, 0);
+	Vect Y(0, 1, 0);
+	Vect Z(0, 0, 1);
+	Vect new_sphere_position(1.75, -0.25, 0);
+	Vect new_sphere_position2(-1, -0.25, -2);
+	Vect new_sphere_position3(0, 2, 0);
+
+	Color white_light(1.0, 1.0, 1.0, 1);
+	Color very_green(0.5, 1.0, 0.5, 0.3);
+	Color maroon(0.5, 0.25, 0.25, 0);
+	Color grey(0.5, 0.5, 0.5, 0);
+	Color black(0.0, 0.0, 0.0, 0);
+	Color orange(0.94, 0.75, 0.31, 0);
+	Color orange_reflective(0.94, 0.75, 0.31, 0.2);
+	Color check_floor(1, 1, 1, 2);
+	Color blue_floor(0.298, 0.475, 0.937, 0);
+
+	scene_objects.push_back(new Sphere (O, 1, very_green, Material(2, 0.3, 0, very_green)));
+	scene_objects[0]->setIndex(0);
+	scene_objects.push_back(new Sphere (new_sphere_position, 0.5, grey, Material(1, 0, 0, grey)));
+	scene_objects[1]->setIndex(1);
+	scene_objects.push_back(new Sphere (new_sphere_position2, 0.5, orange_reflective, Material(2, 0.2, 0, orange_reflective)));
+	scene_objects[2]->setIndex(2);
+	scene_objects.push_back(new Sphere (new_sphere_position3, 0.5, grey, Material(1, 0.2, 0, grey)));
+	scene_objects[3]->setIndex(3);
+	scene_objects.push_back(new Triangle (Vect(0, -1.5, 20), Vect(-20, -1.6, -20), Vect(20, -1.6, -20), blue_floor, Material(1, 0, 0, blue_floor)));
+	scene_objects[4]->setIndex(4);
+	scene_objects.push_back(new Triangle (Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange_reflective, Material(2, 0.2, 0, orange_reflective)));
+	scene_objects[5]->setIndex(5);
+
+}
+
+
+void Renderer::CreateTriangleScene() 
+{
+	Color orange(0.94, 0.75, 0.31, 0);
+
+}
+
 void Renderer::render() {
 
 	std::cout << "rendering ..." << std::endl;
@@ -461,35 +506,38 @@ void Renderer::render() {
 
 	//Objects
 
-	Sphere scene_sphere(O, 1, very_green, Material(2, 0.3, 0, very_green));
-	Torus scene_torus(O, 0.1, 0.5, grey, Material(1, 0, 0, grey));
-	Plane scene_plane(Y, -1, check_floor, Material(1, 0, 0, check_floor));
-	Sphere scene_sphere2(new_sphere_position, 0.5, grey, Material(1, 0, 0, grey));
-	Sphere scene_sphere3(new_sphere_position2, 0.5, orange_reflective, Material(2, 0.2, 0, orange_reflective));
-	Sphere scene_sphere4(new_sphere_position3, 0.5, grey, Material(1, 0.2, 0, grey));
-	Triangle scene_triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange_reflective, Material(2, 0.2, 0, orange_reflective));
-	Triangle scene_floor1(Vect(-5, -1.5, -2), Vect(5, -1.5, -3), Vect(-5, -1.5, 5), blue_floor, Material(1, 0, 0, blue_floor));
-	Triangle scene_floor2(Vect(-5, -1.5, 5), Vect(5, -1.5, 5), Vect(5, -1.5, -3), blue_floor, Material(1, 0, 0, blue_floor));
-	Triangle scene_floor3(Vect(0, -1.5, 20), Vect(-20, -1.6, -20), Vect(20, -1.6, -20), blue_floor, Material(1, 0, 0, blue_floor));
+	//Sphere scene_sphere(O, 1, very_green, Material(2, 0.3, 0, very_green));
+	//Torus scene_torus(O, 0.1, 0.5, grey, Material(1, 0, 0, grey));
+	//Plane scene_plane(Y, -1, check_floor, Material(1, 0, 0, check_floor));
+	//Sphere scene_sphere2(new_sphere_position, 0.5, grey, Material(1, 0, 0, grey));
+	//Sphere scene_sphere3(new_sphere_position2, 0.5, orange_reflective, Material(2, 0.2, 0, orange_reflective));
+	//Sphere scene_sphere4(new_sphere_position3, 0.5, grey, Material(1, 0.2, 0, grey));
+	//Triangle scene_triangle(Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange_reflective, Material(2, 0.2, 0, orange_reflective));
+	//Triangle scene_floor1(Vect(-5, -1.5, -2), Vect(5, -1.5, -3), Vect(-5, -1.5, 5), blue_floor, Material(1, 0, 0, blue_floor));
+	//Triangle scene_floor2(Vect(-5, -1.5, 5), Vect(5, -1.5, 5), Vect(5, -1.5, -3), blue_floor, Material(1, 0, 0, blue_floor));
+	//Triangle scene_floor3(Vect(0, -1.5, 20), Vect(-20, -1.6, -20), Vect(20, -1.6, -20), blue_floor, Material(1, 0, 0, blue_floor));
 
-	std::vector<ObjectBase*> scene_objects;
-	scene_sphere.setIndex(0);
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere));	
-	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_torus));
-	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_plane));
-	scene_sphere2.setIndex(1);
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere2));
-	scene_sphere3.setIndex(2);
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere3));
-	scene_sphere4.setIndex(3);
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere4));	
-	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_triangle));
-	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor1));
-	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor2));
-	scene_floor3.setIndex(4);
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor3));
-	scene_triangle.setIndex(5);
-	scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_triangle));
+	////std::vector<ObjectBase*> scene_objects;
+	//scene_sphere.setIndex(0);
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere));	
+	////scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_torus));
+	////scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_plane));
+	//scene_sphere2.setIndex(1);
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere2));
+	//scene_sphere3.setIndex(2);
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere3));
+	//scene_sphere4.setIndex(3);
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_sphere4));	
+	////scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_triangle));
+	////scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor1));
+	////scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor2));
+	//scene_floor3.setIndex(4);
+	//scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_floor3));
+	////scene_triangle.setIndex(5);
+	////scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_triangle));
+
+	CreateScene();
+
 	
 	double xamnt, yamnt;
 	int thisone, aa_index;
