@@ -71,9 +71,6 @@
     <ClInclude Include="teapotdata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix44.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AccelerationStructure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
