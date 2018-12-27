@@ -4,11 +4,11 @@ d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Vect.h(77): warning C424
 d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Vect.h(95): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
 d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Vect.h(111): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
 d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\AccelerationStructure.h(39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(175): warning C4838: conversion from 'int' to 'unsigned char' requires a narrowing conversion
-d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(349): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(355): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(441): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(702): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(186): warning C4838: conversion from 'int' to 'unsigned char' requires a narrowing conversion
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(390): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(396): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(497): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\Renderer.h(758): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\opencv\include\opencv2\core\cvstd.hpp(575): warning C4793: 'cv::String::String': function compiled as native:
   	Found an intrinsic not supported in managed code
 d:\gmt\advanced graphics\gitsaves\raytracer0\raytracer7\opencv\include\opencv2\core\cuda.inl.hpp(105): warning C4793: 'cv::cuda::GpuMat::GpuMat': function compiled as native:

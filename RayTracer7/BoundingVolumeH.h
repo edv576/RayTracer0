@@ -392,7 +392,7 @@ bool BoundingVolumeH::Intersect(const Vect& orig, const Vect& dir, double& tH, i
 							t = tNC;
 						}
 						q.push(BoundingVolumeH::OctreeH::QElement(node->children[i], t));
-						nIntersections++;
+						//nIntersections++;
 					}
 				}
 			}

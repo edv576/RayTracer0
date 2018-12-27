@@ -92,6 +92,9 @@ namespace RayTracer7 {
 	private: System::Windows::Forms::TextBox^  txtWidth;
 	private: System::Windows::Forms::Label^  lblHeight;
 	private: System::Windows::Forms::Label^  lblWidth;
+	private: System::Windows::Forms::CheckBox^  chkUseBVH;
+	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::Label^  lblIntersections;
 
 
 
@@ -142,6 +145,9 @@ namespace RayTracer7 {
 			this->txtWidth = (gcnew System::Windows::Forms::TextBox());
 			this->lblHeight = (gcnew System::Windows::Forms::Label());
 			this->lblWidth = (gcnew System::Windows::Forms::Label());
+			this->chkUseBVH = (gcnew System::Windows::Forms::CheckBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->lblIntersections = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// lblCameraPosition
@@ -419,11 +425,44 @@ namespace RayTracer7 {
 			this->lblWidth->TabIndex = 30;
 			this->lblWidth->Text = L"Width:";
 			// 
+			// chkUseBVH
+			// 
+			this->chkUseBVH->AutoSize = true;
+			this->chkUseBVH->Checked = true;
+			this->chkUseBVH->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->chkUseBVH->Location = System::Drawing::Point(547, 307);
+			this->chkUseBVH->Name = L"chkUseBVH";
+			this->chkUseBVH->Size = System::Drawing::Size(87, 21);
+			this->chkUseBVH->TabIndex = 32;
+			this->chkUseBVH->Text = L"Use BVH";
+			this->chkUseBVH->UseVisualStyleBackColor = true;
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(472, 377);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(162, 17);
+			this->label1->TabIndex = 33;
+			this->label1->Text = L"Number of intersections:";
+			this->label1->Click += gcnew System::EventHandler(this, &MyForm::label1_Click);
+			// 
+			// lblIntersections
+			// 
+			this->lblIntersections->AutoSize = true;
+			this->lblIntersections->Location = System::Drawing::Point(658, 376);
+			this->lblIntersections->Name = L"lblIntersections";
+			this->lblIntersections->Size = System::Drawing::Size(0, 17);
+			this->lblIntersections->TabIndex = 34;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(809, 455);
+			this->Controls->Add(this->lblIntersections);
+			this->Controls->Add(this->label1);
+			this->Controls->Add(this->chkUseBVH);
 			this->Controls->Add(this->lblHeight);
 			this->Controls->Add(this->lblWidth);
 			this->Controls->Add(this->txtHeight);
@@ -454,6 +493,7 @@ namespace RayTracer7 {
 			this->Controls->Add(this->lblCameraPosition);
 			this->Name = L"MyForm";
 			this->Text = L"Options";
+			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -478,6 +518,8 @@ namespace RayTracer7 {
 				System::String^ t = System::Convert::ToString(ex);
 				testButton->Text = "Rendering ...";
 
+				renderer->setUseBVH(chkUseBVH->Checked);
+
 				renderer->render();
 				testButton->Enabled = false;
 
@@ -487,6 +529,8 @@ namespace RayTracer7 {
 
 				testButton->Enabled = true;
 				testButton->Text = "Render";
+
+				lblIntersections->Text = System::Convert::ToString(renderer->getNIntersections());
 			}
 			catch (const std::exception&)
 			{
@@ -696,6 +740,10 @@ private: System::Void txtHeight_TextChanged(System::Object^  sender, System::Eve
 		txtHeight->Text = "0";
 
 	}
+}
+private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
 }
 };
 

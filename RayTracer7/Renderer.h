@@ -53,6 +53,7 @@ private:Vect lookAt;
 		int height;
 		Vect camDir;
 		int nIntersections;
+		bool useBVH;
 
 
 public:
@@ -85,6 +86,16 @@ public:
 	void setHeight(int h) {
 		height = h;
 
+	}
+
+	void setUseBVH(bool uBVH) {
+
+		useBVH = uBVH;
+	}
+
+	int getNIntersections() {
+
+		return nIntersections;
 	}
 		
 
@@ -296,20 +307,50 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 
 			Ray reflection_ray(intersection_position, reflection_direction);
 
-			// determine what the ray intersects with first
-			//std::vector<double> reflection_intersections;
 
-			//for (int reflection_index = 0; reflection_index < scene_objects.size(); reflection_index++) {
-			//	reflection_intersections.push_back(scene_objects.at(reflection_index)->findIntersection(reflection_ray));
-			//}
 
 			int index_of_winning_object_with_reflection;
 			bool lookShadows = false;
 			double intersectionDistance;
-			bool foundIntersection = accel->Intersect(intersection_position, reflection_direction, intersectionDistance, index_of_winning_object_with_reflection, -1, nIntersections);
+			bool foundIntersection;
+
+			if (useBVH)
+			{
+				foundIntersection = accel->Intersect(intersection_position, reflection_direction, intersectionDistance, index_of_winning_object_with_reflection, -1, nIntersections);
+
+			}
+			else
+			{
+				//determine what the ray intersects with first
+				std::vector<double> reflection_intersections;
+				intersectionDistance;
+
+				for (int reflection_index = 0; reflection_index < scene_objects.size(); reflection_index++) {
+					intersectionDistance = scene_objects.at(reflection_index)->findIntersection(reflection_ray);
+					if (intersectionDistance != -1)
+					{
+						nIntersections++;
+					}
+					reflection_intersections.push_back(intersectionDistance);
+				}
+
+				index_of_winning_object_with_reflection = winningObjectIndex(reflection_intersections);
+				if (index_of_winning_object_with_reflection != -1)
+				{
+					foundIntersection = true;
+					intersectionDistance = reflection_intersections.at(index_of_winning_object_with_reflection);
+				}
+				else
+				{
+					intersectionDistance = -1;
+					foundIntersection = false;
+				}
+
+				
+			}
 
 
-			//int index_of_winning_object_with_reflection = winningObjectIndex(reflection_intersections);
+			
 
 			if (foundIntersection) {
 				if (intersectionDistance > accuracy) {
@@ -361,26 +402,41 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 			double intersectionDistance;
 			int index_of_winning_object_shadow;
 
-			if (shadowed == false)
-			{
-				//Looking for shadows with early break if found
-				foundIntersectionShadow = accel->Intersect(intersection_position, shadow_ray.getRayDirection(), intersectionDistance, index_of_winning_object_shadow, distance_to_light_magnitude, nIntersections);
-				shadowed = foundIntersectionShadow;
-			}
 
-			/*for (int object_index = 0; object_index < scene_objects.size() && shadowed == false; object_index++) {
-				secondary_intersections.push_back(scene_objects.at(object_index)->findIntersection(shadow_ray));
-			}
-
-			for (int c = 0; c < secondary_intersections.size(); c++) {
-				if (secondary_intersections.at(c) > accuracy) {
-					if (secondary_intersections.at(c) <= distance_to_light_magnitude) {
-						shadowed = true;
-					}
-					break;
+			if (useBVH) {
+				if (shadowed == false)
+				{
+					//Looking for shadows with early break if found
+					foundIntersectionShadow = accel->Intersect(intersection_position, shadow_ray.getRayDirection(), intersectionDistance, index_of_winning_object_shadow, distance_to_light_magnitude, nIntersections);
+					shadowed = foundIntersectionShadow;
 				}
 
-			}*/
+			}
+			else
+			{
+				for (int object_index = 0; object_index < scene_objects.size() && shadowed == false; object_index++) {
+					intersectionDistance = scene_objects.at(object_index)->findIntersection(shadow_ray);
+					if (intersectionDistance != -1)
+					{
+						nIntersections++;
+					}
+					secondary_intersections.push_back(intersectionDistance);
+				}
+
+				for (int c = 0; c < secondary_intersections.size(); c++) {
+					if (secondary_intersections.at(c) > accuracy) {
+						if (secondary_intersections.at(c) <= distance_to_light_magnitude) {
+							shadowed = true;
+						}
+					break;
+					}
+
+				}
+			}
+
+			
+
+
 
 			if (shadowed == false) {
 				final_color = final_color.colorAdd(winning_object_color.colorMultiply(light_sources.at(light_index)->getLightColor()).colorScalar(cosine_angle));
@@ -548,7 +604,7 @@ void Renderer::CreateTriangleScene()
 	Vect O(0, 0, 0);
 	int index = 0;
 	double triangleSide = 0.1;
-	int nFaces = 3;
+	int nFaces = 9;
 
 	//Fist face
 	//CreateYFace(O, orange, triangleSide, index);
@@ -756,14 +812,7 @@ void Renderer::render() {
 
 					Ray cam_ray = Ray(cam_ray_origin, cam_ray_direction);
 
-					//std::vector<double> intersections;
-
-					//for (int index = 0; index < scene_objects.size(); index++) {
-					//	intersections.push_back(scene_objects.at(index)->findIntersection(cam_ray));
-
-					//}
-
-					//int index_of_winning_object = winningObjectIndex(intersections);
+					
 					
 					int index_of_winning_object;
 
@@ -771,15 +820,48 @@ void Renderer::render() {
 					bool foundIntersection;
 					bool lookShadows = false;
 
-					try
+					
+					if (useBVH)
 					{
 						foundIntersection = accel->Intersect(cam_ray_origin, cam_ray_direction, intersectionDistance, index_of_winning_object, -1, nIntersections);
+						if (index_of_winning_object == -1)
+						{
+							int t = 0;
+
+						}
 
 					}
-					catch (const std::exception&)
+					else
 					{
-						int z = 0;
+						std::vector<double> intersections;
+
+						for (int index = 0; index < scene_objects.size(); index++) {
+							intersectionDistance = scene_objects.at(index)->findIntersection(cam_ray);
+							if (intersectionDistance != -1)
+							{
+								nIntersections++;
+							}
+							intersections.push_back(intersectionDistance);
+
+						}
+
+						index_of_winning_object = winningObjectIndex(intersections);
+						if (index_of_winning_object != -1)
+						{
+							foundIntersection = true;
+							intersectionDistance = intersections.at(index_of_winning_object);
+						}
+						else
+						{
+							intersectionDistance = -1;
+							foundIntersection = false;
+						}
+
+						
 					}
+
+
+
 				
 
 					if (!foundIntersection) {
@@ -892,6 +974,7 @@ void Renderer::render() {
 	char buffer[100];
 	sprintf(buffer, "The number of intersections is %d\n", nIntersections);
 	OutputDebugStringA(buffer);
+
 
 	saveBMP("scene.bmp", width, height, dpi, pixels);
 
