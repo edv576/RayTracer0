@@ -97,6 +97,9 @@ private:
 	int px, py, debStep;
 	void CreateScene();
 	void CreateTriangleScene();
+	void CreateYFace(Vect, Color, double, int&);
+	void CreateXFace(Vect, Color, double, int&);
+	void CreateZFace(Vect, Color, double, int&);
 	std::vector<ObjectBase*> scene_objects;
 
 };
@@ -424,25 +427,156 @@ void Renderer::CreateScene() {
 	Color check_floor(1, 1, 1, 2);
 	Color blue_floor(0.298, 0.475, 0.937, 0);
 
-	scene_objects.push_back(new Sphere (O, 1, very_green, Material(2, 0.3, 0, very_green)));
-	scene_objects[0]->setIndex(0);
-	scene_objects.push_back(new Sphere (new_sphere_position, 0.5, grey, Material(1, 0, 0, grey)));
-	scene_objects[1]->setIndex(1);
-	scene_objects.push_back(new Sphere (new_sphere_position2, 0.5, orange_reflective, Material(2, 0.2, 0, orange_reflective)));
-	scene_objects[2]->setIndex(2);
-	scene_objects.push_back(new Sphere (new_sphere_position3, 0.5, grey, Material(1, 0.2, 0, grey)));
-	scene_objects[3]->setIndex(3);
+	//scene_objects.push_back(new Sphere (O, 1, very_green, Material(2, 0.3, 0, very_green)));
+	//scene_objects[0]->setIndex(0);
+	//scene_objects.push_back(new Sphere (new_sphere_position, 0.5, grey, Material(1, 0, 0, grey)));
+	//scene_objects[1]->setIndex(1);
+	//scene_objects.push_back(new Sphere (new_sphere_position2, 0.5, orange_reflective, Material(2, 0.2, 0, orange_reflective)));
+	//scene_objects[2]->setIndex(2);
+	//scene_objects.push_back(new Sphere (new_sphere_position3, 0.5, grey, Material(1, 0.2, 0, grey)));
+	//scene_objects[3]->setIndex(3);
 	scene_objects.push_back(new Triangle (Vect(0, -1.5, 20), Vect(-20, -1.6, -20), Vect(20, -1.6, -20), blue_floor, Material(1, 0, 0, blue_floor)));
-	scene_objects[4]->setIndex(4);
-	scene_objects.push_back(new Triangle (Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange_reflective, Material(2, 0.2, 0, orange_reflective)));
-	scene_objects[5]->setIndex(5);
+	scene_objects[scene_objects.size()-1]->setIndex(scene_objects.size() - 1);
+	//scene_objects.push_back(new Triangle (Vect(3, 0, 0), Vect(0, 3, 0), Vect(0, 0, 3), orange_reflective, Material(2, 0.2, 0, orange_reflective)));
+	//scene_objects[5]->setIndex(5);
 
 }
 
+void Renderer::CreateYFace(Vect origin, Color color, double tSide, int& index)
+{
+	scene_objects.push_back(new Triangle(origin,
+		Vect(origin.getVectX()+tSide,origin.getVectY(),origin.getVectZ()),
+		Vect(origin.getVectX(),origin.getVectY(),origin.getVectZ()+tSide),
+		color, 
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+	scene_objects.push_back(new Triangle(Vect(origin.getVectX(), origin.getVectY(), origin.getVectZ() + tSide),
+		Vect(origin.getVectX() + tSide, origin.getVectY(), origin.getVectZ() + tSide*2),
+		Vect(origin.getVectX(), origin.getVectY(), origin.getVectZ() + tSide*2),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+	scene_objects.push_back(new Triangle(Vect(origin.getVectX() + tSide, origin.getVectY(), origin.getVectZ() + tSide*2),
+		Vect(origin.getVectX() + tSide*2, origin.getVectY(), origin.getVectZ() + tSide*2),
+		Vect(origin.getVectX() + tSide*2, origin.getVectY(), origin.getVectZ() + tSide),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+	scene_objects.push_back(new Triangle(Vect(origin.getVectX() + tSide, origin.getVectY(), origin.getVectZ()),
+		Vect(origin.getVectX() + tSide*2, origin.getVectY(), origin.getVectZ()),
+		Vect(origin.getVectX() + tSide*2, origin.getVectY(), origin.getVectZ() + tSide),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+}
+
+void Renderer::CreateXFace(Vect origin, Color color, double tSide, int& index)
+{
+	scene_objects.push_back(new Triangle(origin,
+		Vect(origin.getVectX(), origin.getVectY() + tSide, origin.getVectZ()),
+		Vect(origin.getVectX(), origin.getVectY(), origin.getVectZ() + tSide),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+	scene_objects.push_back(new Triangle(Vect(origin.getVectX(), origin.getVectY(), origin.getVectZ() + tSide),
+		Vect(origin.getVectX(), origin.getVectY() + tSide, origin.getVectZ() + tSide*2),
+		Vect(origin.getVectX(), origin.getVectY(), origin.getVectZ() + tSide*2),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+	scene_objects.push_back(new Triangle(Vect(origin.getVectX(), origin.getVectY() + tSide, origin.getVectZ() + tSide*2),
+		Vect(origin.getVectX(), origin.getVectY() + tSide*2, origin.getVectZ() + tSide*2),
+		Vect(origin.getVectX(), origin.getVectY() + tSide*2, origin.getVectZ() + tSide),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+	scene_objects.push_back(new Triangle(Vect(origin.getVectX(), origin.getVectY() + tSide, origin.getVectZ()),
+		Vect(origin.getVectX(), origin.getVectY() + tSide*2, origin.getVectZ()),
+		Vect(origin.getVectX(), origin.getVectY() + tSide*2, origin.getVectZ() + tSide),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+
+}
+
+void Renderer::CreateZFace(Vect origin, Color color, double tSide, int& index)
+{
+	scene_objects.push_back(new Triangle(origin,
+		Vect(origin.getVectX(), origin.getVectY() + tSide, origin.getVectZ()),
+		Vect(origin.getVectX() + tSide, origin.getVectY(), origin.getVectZ()),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+	scene_objects.push_back(new Triangle(Vect(origin.getVectX() + tSide, origin.getVectY(), origin.getVectZ()),
+		Vect(origin.getVectX() + tSide * 2, origin.getVectY() + tSide, origin.getVectZ()),
+		Vect(origin.getVectX() + tSide * 2, origin.getVectY(), origin.getVectZ()),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+	scene_objects.push_back(new Triangle(Vect(origin.getVectX() + tSide * 2, origin.getVectY() + tSide, origin.getVectZ()),
+		Vect(origin.getVectX() + tSide * 2, origin.getVectY() + tSide * 2, origin.getVectZ()),
+		Vect(origin.getVectX() + tSide, origin.getVectY() + tSide * 2, origin.getVectZ()),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+	scene_objects.push_back(new Triangle(Vect(origin.getVectX(), origin.getVectY() + tSide, origin.getVectZ()),
+		Vect(origin.getVectX(), origin.getVectY() + tSide * 2, origin.getVectZ()),
+		Vect(origin.getVectX() + tSide, origin.getVectY() + tSide * 2, origin.getVectZ()),
+		color,
+		Material(1, 0, 0, color)));
+	scene_objects[index]->setIndex(index);
+	index++;
+
+}
 
 void Renderer::CreateTriangleScene() 
 {
 	Color orange(0.94, 0.75, 0.31, 0);
+	Vect O(0, 0, 0);
+	int index = 0;
+	double triangleSide = 0.1;
+	int nFaces = 9;
+
+	//Fist face
+	//CreateYFace(O, orange, triangleSide, index);
+	//CreateXFace(O, orange, triangleSide, index);
+	//CreateZFace(O, orange, triangleSide, index);
+
+	int count = 0;
+
+	for (double x = 0; x <= triangleSide*2*nFaces; x+=triangleSide*2) {
+		for (double y = 0; y <= triangleSide* 2 * nFaces; y+= triangleSide * 2) {
+			for (double z = 0; z <= triangleSide* 2 * nFaces; z+= triangleSide * 2)
+			{
+				CreateXFace(Vect(x, y, z), orange, triangleSide, index);
+				CreateYFace(Vect(x, y, z), orange, triangleSide, index);
+				CreateZFace(Vect(x, y, z), orange, triangleSide, index);
+				count += 3;
+			}
+		}
+
+	}
+
+	int t = 0;
+
+
+	//for (int i = 0; i < 4; i++) {
+	//	scene_objects.push_back(new Triangle());
+
+	//}
+
+
 
 }
 
@@ -536,9 +670,10 @@ void Renderer::render() {
 	////scene_triangle.setIndex(5);
 	////scene_objects.push_back(dynamic_cast<ObjectBase*>(&scene_triangle));
 
+	
+	CreateTriangleScene();
 	CreateScene();
 
-	
 	double xamnt, yamnt;
 	int thisone, aa_index;
 

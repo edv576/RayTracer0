@@ -178,7 +178,9 @@ class BoundingVolumeH2 : public AccelerationStructure
 
 
 				if (node->children[childIndex] == nullptr)
+				{
 					node->children[childIndex] = new Node;
+				}
 				InsertInOctree(node->children[childIndex], extensions, childBoundingBox, d + 1);
 			}
 		}
@@ -248,9 +250,12 @@ BoundingVolumeH2::BoundingVolumeH2(std::vector<ObjectBase*> sceneObjects) : Acce
 				tempCB = planeNormals[j];
 				double distances = tempCB.dotProduct(objects[i]->vertexPool[k]);
 
-				if (distances < ExtensionsList[i].distances[j][0]) ExtensionsList[i].distances[j][0] = distances;
-				if (distances > ExtensionsList[i].distances[j][1]) ExtensionsList[i].distances[j][1] = distances;
-
+				if (distances < ExtensionsList[i].distances[j][0]) {
+					ExtensionsList[i].distances[j][0] = distances;
+				}
+				if (distances > ExtensionsList[i].distances[j][1]) {
+					ExtensionsList[i].distances[j][1] = distances;
+				}
 			}
 			
 		}
@@ -286,10 +291,15 @@ bool BoundingVolumeH2::Extensions::intersect(
 			tN = tNearExtensions;
 			planeIndex = i;
 		}
-		if (tFarExtensions < tF) 
+		if (tFarExtensions < tF)
+		{
 			tF = tFarExtensions;
-		if (tN > tF) 
+		}
+			
+		if (tN > tF)
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -327,7 +337,6 @@ bool BoundingVolumeH2::Intersect(const Vect& orig, const Vect& dir, double& tH, 
 		if (node->leaf) {
 			for (int i = 0; i < node->nodeExtensionsList.size(); i++)
 			{
-				//double t = infinityD;
 				tempIntersection = node->nodeExtensionsList[i]->object->findIntersection(Ray(orig, dir));
 				if ((tempIntersection != -1) && (tempIntersection > accuracy) && (tempIntersection < tH)) {
 					if ((tLight > 0) && (tempIntersection < tLight))
