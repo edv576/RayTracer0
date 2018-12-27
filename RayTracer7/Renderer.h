@@ -604,7 +604,7 @@ void Renderer::CreateTriangleScene()
 	Vect O(0, 0, 0);
 	int index = 0;
 	double triangleSide = 0.1;
-	int nFaces = 9;
+	int nFaces = 3;
 
 	//Fist face
 	//CreateYFace(O, orange, triangleSide, index);

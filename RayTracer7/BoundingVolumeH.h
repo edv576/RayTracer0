@@ -77,8 +77,12 @@ class BoundingVolumeH : public AccelerationStructure
 
 		~OctreeH() { DeleteNode(oRoot); }
 
-		void InsertInOctree(const Extensions* extensions) { InsertInOctree(oRoot, extensions, boundingBox, 0); }
-		void BuildOctree() { BuildOctree(oRoot, boundingBox); };
+		void InsertInOctree(const Extensions* extensions) { 
+			InsertInOctree(oRoot, extensions, boundingBox, 0); 
+		}
+		void BuildOctree() { 
+			BuildOctree(oRoot, boundingBox); 
+		};
 
 		struct Node
 		{
@@ -349,7 +353,9 @@ bool BoundingVolumeH::Intersect(const Vect& orig, const Vect& dir, double& tH, i
 	double tN = 0;
 	double tF = infinityD;
 	if (!octreeH->oRoot->nodeExtensions.intersect(preNum, preDen, tN, tF, planeIndex) || tF < 0)
+	{
 		return false;
+	}
 	tH = tF;
 	std::priority_queue<BoundingVolumeH::OctreeH::QElement> q;
 	q.push(BoundingVolumeH::OctreeH::QElement(octreeH->oRoot, 0));
