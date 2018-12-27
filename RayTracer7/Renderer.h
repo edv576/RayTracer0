@@ -28,7 +28,7 @@
 #include "Torus.h"
 #include "Matrix44.h"
 #include "AccelerationStructure.h"
-#include "BoundingVolumeH2.h"
+#include "BoundingVolumeH.h"
 #include <windows.h>
 
 #pragma warning(disable : 4996)
@@ -52,6 +52,7 @@ private:Vect lookAt;
 		int width;
 		int height;
 		Vect camDir;
+		int nIntersections;
 
 
 public:
@@ -115,6 +116,7 @@ Renderer::Renderer()
 	py = 0;
 	px = 0;
 	debStep = 0;
+	nIntersections = 0;
 }
 
 void Renderer::saveBMP(const char *filename, int w, int h, int dpi, RGBType *data)
@@ -304,7 +306,7 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 			int index_of_winning_object_with_reflection;
 			bool lookShadows = false;
 			double intersectionDistance;
-			bool foundIntersection = accel->Intersect(intersection_position, reflection_direction, intersectionDistance, index_of_winning_object_with_reflection, -1);
+			bool foundIntersection = accel->Intersect(intersection_position, reflection_direction, intersectionDistance, index_of_winning_object_with_reflection, -1, nIntersections);
 
 
 			//int index_of_winning_object_with_reflection = winningObjectIndex(reflection_intersections);
@@ -362,7 +364,7 @@ Color Renderer::getColorAt(Vect intersection_position, Vect intersecting_ray_dir
 			if (shadowed == false)
 			{
 				//Looking for shadows with early break if found
-				foundIntersectionShadow = accel->Intersect(intersection_position, shadow_ray.getRayDirection(), intersectionDistance, index_of_winning_object_shadow, distance_to_light_magnitude);
+				foundIntersectionShadow = accel->Intersect(intersection_position, shadow_ray.getRayDirection(), intersectionDistance, index_of_winning_object_shadow, distance_to_light_magnitude, nIntersections);
 				shadowed = foundIntersectionShadow;
 			}
 
@@ -546,7 +548,7 @@ void Renderer::CreateTriangleScene()
 	Vect O(0, 0, 0);
 	int index = 0;
 	double triangleSide = 0.1;
-	int nFaces = 9;
+	int nFaces = 3;
 
 	//Fist face
 	//CreateYFace(O, orange, triangleSide, index);
@@ -682,7 +684,7 @@ void Renderer::render() {
 	double tempBlue[aadepth*aadepth];
 	//std::unique_ptr<AccelerationStructure> accel(new BVH(scene_objects));
 	//std::unique_ptr<AccelerationStructure> accel(new BoundingVolumeH(scene_objects));
-	std::unique_ptr<AccelerationStructure> accel(new BoundingVolumeH2(scene_objects));
+	std::unique_ptr<AccelerationStructure> accel(new BoundingVolumeH(scene_objects));
 
 	for (int x = 0; x < width; x++)
 	{
@@ -771,7 +773,7 @@ void Renderer::render() {
 
 					try
 					{
-						foundIntersection = accel->Intersect(cam_ray_origin, cam_ray_direction, intersectionDistance, index_of_winning_object, -1);
+						foundIntersection = accel->Intersect(cam_ray_origin, cam_ray_direction, intersectionDistance, index_of_winning_object, -1, nIntersections);
 
 					}
 					catch (const std::exception&)
@@ -886,6 +888,10 @@ void Renderer::render() {
 
 		}
 	}
+
+	char buffer[100];
+	sprintf(buffer, "The number of intersections is %d\n", nIntersections);
+	OutputDebugStringA(buffer);
 
 	saveBMP("scene.bmp", width, height, dpi, pixels);
 

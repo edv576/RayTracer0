@@ -148,8 +148,8 @@
   <ItemGroup>
     <ClInclude Include="AccelerationStructure.h" />
     <ClInclude Include="algebra.h" />
-    <ClInclude Include="BBOX.h" />
-    <ClInclude Include="BoundingVolumeH2.h" />
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="BoundingVolumeH.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Light.h" />

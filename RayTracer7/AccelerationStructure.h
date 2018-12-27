@@ -48,7 +48,7 @@ public:
 		return t;
 	}
 
-	virtual bool Intersect(const Vect& orig, const Vect& dir, double& t, int& index, double tLight) const {
+	virtual bool Intersect(const Vect& orig, const Vect& dir, double& t, int& index, double tLight, int& nIntersections) const {
 
 		return false;
 	}
